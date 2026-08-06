@@ -21,14 +21,14 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @GetMapping("/")
-    public String home() {
-        return "redirect:/admin/product";
-    }
+    // @GetMapping("/")
+    // public String home() {
+    // return "redirect:/admin/product";
+    // }
 
     @GetMapping
     public String showProductList(
-            @RequestParam(required = false, defaultValue = "0") Long category,
+            @RequestParam(name = "category", required = false, defaultValue = "0") Long category,
 
             Model model) {
         // 1. カテゴリ一覧取得
@@ -49,7 +49,7 @@ public class ProductController {
     @PostMapping("/delete")
     public String deleteProduct(
             @RequestParam Long id, // 削除対象の商品ID
-            @RequestParam(required = false, defaultValue = "0") Long category) {
+            @RequestParam(name = "category", required = false, defaultValue = "0") Long category) {
 
         // 消すとき
         productService.deleteProduct(id);

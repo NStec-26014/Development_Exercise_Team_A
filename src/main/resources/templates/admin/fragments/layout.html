@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- Layout fragments used by admin pages (header, footer) -->
+
+<div th:fragment="header">
+    <header style="margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+            <h2 style="margin:0">フルネス文具 管理画面</h2>
+            <nav>
+                <a href="/admin/product" style="margin-right:12px;">商品情報メンテナンス</a>
+                <a href="#" style="margin-right:12px;">商品カテゴリ登録</a>
+                <a href="#" style="margin-right:12px;">購入履歴検索</a>
+                <a href="#">ログアウト</a>
+            </nav>
+        </div>
+        <hr />
+    </header>
+</div>
+
+<div th:fragment="footer">
+    <footer style="margin-top:18px;color:#666;font-size:13px;">
+        <hr />
+        <div>フッター: 管理画面の補足表示</div>
+    </footer>
+</div>
