@@ -21,6 +21,11 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @GetMapping("/")
+    public String home() {
+        return "redirect:/admin/product";
+    }
+
     @GetMapping
     public String showProductList(
             @RequestParam(required = false, defaultValue = "0") Long category,

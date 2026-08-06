@@ -42,7 +42,7 @@ public class ProductService {
         categoryMapper.insert(category);
     }
 
-    // 商品削除（論理削除）
+    // 商品削除
     public void deleteProduct(Long id) {
         productMapper.deleteById(id);
     }
