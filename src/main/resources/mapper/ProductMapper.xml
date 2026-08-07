@@ -11,42 +11,61 @@
         <result property="deleteFlag" column="delete_flag" />
     </resultMap>
 
-    <select id="findAll" resultMap="ProductResult">
-         <![CDATA[ 
+    <select id="findAllWithPaging" resultMap="ProductResult">
+    <![CDATA[ 
         SELECT id, product_category_id, name, price, image_url, delete_flag
         FROM product
         WHERE delete_flag = 0
         ORDER BY id
+        LIMIT #{pageSize} OFFSET #{offset}
         ]]>
     </select>
 
-    <select id="findByCategoryId" parameterType="long" resultMap="ProductResult">
-        <![CDATA[ 
+    <select id="findByCategoryIdWithPaging" resultMap="ProductResult">
+    <![CDATA[ 
         SELECT id, product_category_id, name, price, image_url, delete_flag
         FROM product
         WHERE product_category_id = #{categoryId}
           AND delete_flag = 0
         ORDER BY id
-         ]]>
+        LIMIT #{pageSize} OFFSET #{offset}
+        ]]>
+    </select>
+
+    <select id="countAll" resultType="int">
+    <![CDATA[ 
+        SELECT COUNT(*)
+        FROM product
+        WHERE delete_flag = 0
+        ]]>
+    </select>
+
+    <select id="countByCategoryId" resultType="int">
+    <![CDATA[ 
+        SELECT COUNT(*)
+        FROM product
+        WHERE product_category_id = #{categoryId}
+          AND delete_flag = 0
+          ]]>
     </select>
 
     <select id="findById" parameterType="long" resultMap="ProductResult">
-        <![CDATA[ 
+    <![CDATA[ 
         SELECT id, product_category_id, name, price, image_url, delete_flag
         FROM product
         WHERE id = #{id}
-         ]]>
+        ]]>
     </select>
 
-    <insert id="insert" parameterType="com.example.fullness.stationary.entity.Product" useGeneratedKeys="true" keyProperty="id">
-        <![CDATA[ 
+    <insert id="insert" parameterType="com.example.fullness.stationary.entity.Product">
+    <![CDATA[ 
         INSERT INTO product (product_category_id, name, price, image_url, delete_flag)
         VALUES (#{productCategoryId}, #{name}, #{price}, #{imageUrl}, #{deleteFlag})
         ]]>
     </insert>
 
     <update id="deleteById" parameterType="long">
-        <![CDATA[ 
+    <![CDATA[ 
         UPDATE product
         SET delete_flag = 1
         WHERE id = #{id}

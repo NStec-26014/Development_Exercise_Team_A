@@ -25,11 +25,30 @@ public class ProductService {
     }
 
     // 商品検索（カテゴリIDで絞り込み）
-    public List<Product> searchProducts(Long categoryId) {
-        if (categoryId == null || categoryId == 0) {
-            return productMapper.findAll();
+    // public List<Product> searchProducts(Long categoryId) {
+    // if (categoryId == null || categoryId == 0) {
+    // return productMapper.findAll();
+    // }
+    // return productMapper.findByCategoryId(categoryId);
+    // }
+
+    public List<Product> geProductsByCategoryWithPaging(Long id, int page, int pageSize) {
+        int offset = (page - 1) * pageSize;
+
+        if (id == null || id == 0) {
+            return productMapper.findAllWithPaging(offset, pageSize);
+        } else {
+            return productMapper.findByCategoryIdWithPaging(id, offset, pageSize);
+
         }
-        return productMapper.findByCategoryId(categoryId);
+    }
+
+    public int countProductsByCategory(Long id) {
+        if (id == null || id == 0) {
+            return productMapper.countAll();
+        } else {
+            return productMapper.countByCategoryId(id);
+        }
     }
 
     // 商品登録

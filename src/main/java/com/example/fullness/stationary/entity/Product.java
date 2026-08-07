@@ -13,8 +13,8 @@ public class Product implements Serializable {
     private Long productCategoryId; // カテゴリID（外部キー）
     private String name; // 商品名（例: "水性ボールペン(赤)"）
     private Integer price; // 価格（例: 120）
-    private String imageUrl; // 画像URL（例: "/images/pen_red.png"）
-    private Integer deleteFlag; // 論理削除フラグ（0有効, 1削除済み）
+    private String imageUrl; // 画像URL
+    private Integer deleteFlag; // 0有効, 1削除済み
 
     public Product() {
     }
@@ -28,7 +28,7 @@ public class Product implements Serializable {
         this.deleteFlag = 0;
     }
 
-    // DB取得データ用
+    // DB取得データ用 テストとかで使うかも
     public Product(Long id, Long productCategoryId, String name, Integer price,
             String imageUrl, Integer deleteFlag) {
         this.id = id;

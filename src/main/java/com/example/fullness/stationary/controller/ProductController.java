@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -21,40 +21,41 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    // @GetMapping("/")
-    // public String home() {
-    // return "redirect:/admin/product";
-    // }
-
     @GetMapping
     public String showProductList(
             @RequestParam(name = "category", required = false, defaultValue = "0") Long category,
-
+            @RequestParam(name = "page", defaultValue = "1") int page,
             Model model) {
+
+        int pageSize = 10;
         // 1. カテゴリ一覧取得
         List<Category> categories = productService.getAllCategories();
 
         // 2. 商品検索
-        List<Product> products = productService.searchProducts(category);
+        List<Product> products = productService.geProductsByCategoryWithPaging(category, page, pageSize);
 
+        int totalCount = productService.countProductsByCategory(category);
+        int totalPages = (int) Math.ceil((double) totalCount / pageSize);
         // 3. Modelにデータを詰める
         model.addAttribute("categories", categories);
         model.addAttribute("products", products);
         model.addAttribute("selectedCategory", category);
+        model.addAttribute("totalPages", totalPages);
 
         // 4. テンプレート名を返す
         return "admin/product"; // → templates/admin/product.html
     }
 
-    @PostMapping("/delete")
-    public String deleteProduct(
-            @RequestParam Long id, // 削除対象の商品ID
-            @RequestParam(name = "category", required = false, defaultValue = "0") Long category) {
-
-        // 消すとき
-        productService.deleteProduct(id);
-
-        // リダイレクト（削除後、同じカテゴリの一覧に戻る）
-        return "redirect:/admin/product?category=" + category;
+    @GetMapping("/delete/{id}")
+    public String showDeletePage(@PathVariable Long id, Model model) {
+        model.addAttribute("productId", id);
+        return "admin/product-delete";
     }
+
+    @GetMapping("/edit/{id}")
+    public String showEditPage(@PathVariable Long id, Model model) {
+        model.addAttribute("productId", id);
+        return "admin/product-edit";
+    }
+
 }
