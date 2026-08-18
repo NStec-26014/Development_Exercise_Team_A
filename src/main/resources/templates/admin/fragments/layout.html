@@ -4,23 +4,21 @@
 <!-- Layout fragments used by admin pages (header, footer) -->
 
 <div th:fragment="header">
-    <header style="margin-bottom:16px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-            <h2 style="margin:0">フルネス文具 管理画面</h2>
-            <nav>
-                <a href="/admin/product" style="margin-right:12px;">商品情報メンテナンス</a>
-                <a href="/admin/category/add" style="margin-right:12px;">商品カテゴリ登録</a>
-                <a href="/admin/order/search" style="margin-right:12px;">購入履歴検索</a>
-                <a href="/admin">ログアウト</a>
+    <header class="admin-header py-3 px-4 mb-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="admin-title mb-0">フルネス文具 管理画面</h2>
+            <nav class="d-flex gap-3 align-items-center">
+                <a class="nav-link" href="/admin/product">商品情報メンテナンス</a>
+                <a class="nav-link" href="/admin/category/add">商品カテゴリ登録</a>
+                <a class="nav-link" href="/admin/order/search">購入履歴検索</a>
+                <a class="nav-link" href="/admin">ログアウト</a>
             </nav>
         </div>
-        <hr />
     </header>
 </div>
 
 <div th:fragment="footer">
-    <footer style="margin-top:18px;color:#666;font-size:13px;">
-        <hr />
+    <footer class="admin-footer mt-4 py-3 px-4">
         <div>フッター: 管理画面の補足表示</div>
     </footer>
 </div>

@@ -4,55 +4,58 @@
 <head>
     <meta charset="UTF-8">
     <title>商品一覧</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 
 <body>
     <div th:replace="~{admin/fragments/layout :: header}"></div>
     <div class="container mt-4">
 
-        <h2 class="text-center mb-4">商品一覧</h2>
+        <div class="admin-panel p-4">
+            <h2 class="text-center mb-4">商品一覧</h2>
 
-        <!-- カテゴリ検索 -->
-        <form th:action="@{/admin/product}" method="get" class="d-flex justify-content-center gap-2 mb-4">
-            <select name="category" class="form-select w-auto">
-                <option value="0">すべて</option>
-                <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"
-                    th:selected="${selectedCategory != null and selectedCategory == cat.id}">
-                </option>
-            </select>
-            <button type="submit" class="btn btn-primary">カテゴリ検索</button>
-            <a th:href="@{/admin/product/add}" class="btn btn-success">商品追加</a>
-        </form>
+            <!-- カテゴリ検索 -->
+            <form th:action="@{/admin/product}" method="get" class="d-flex justify-content-center gap-2 mb-4">
+                <select name="category" class="form-select w-auto">
+                    <option value="0">すべて</option>
+                    <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"
+                        th:selected="${selectedCategory != null and selectedCategory == cat.id}">
+                    </option>
+                </select>
+                <button type="submit" class="btn btn-fs-solid">カテゴリ検索</button>
+                <a th:href="@{/admin/product/add}" class="btn btn-fs">商品追加</a>
+            </form>
 
-        <!-- 商品一覧 -->
-        <table class="table table-bordered table-striped text-center align-middle">
-            <thead class="table-dark">
-                <tr>
-                    <th>ID</th>
-                    <th>カテゴリ</th>
-                    <th>商品名</th>
-                    <th>価格</th>
-                    <th>画像</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="product : ${products}">
-                    <td th:text="${product.id}"></td>
-                    <td th:text="${product.productCategoryId}"></td>
-                    <td th:text="${product.name}"></td>
-                    <td th:text="${product.price}"></td>
-                    <td>
-                        <img th:src="${product.imageUrl}" alt="商品画像" width="80">
-                    </td>
-                    <td>
-                        <a th:href="@{/admin/product/delete/{id}(id=${product.id})}"
-                            class="btn btn-danger btn-sm">削除</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+            <!-- 商品一覧 -->
+            <table class="table table-bordered table-striped text-center align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>カテゴリ</th>
+                        <th>商品名</th>
+                        <th>価格</th>
+                        <th>画像</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="product : ${products}">
+                        <td th:text="${product.id}"></td>
+                        <td th:text="${product.productCategoryId}"></td>
+                        <td th:text="${product.name}"></td>
+                        <td th:text="${product.price}"></td>
+                        <td>
+                            <img class="table-thumb" th:src="${product.imageUrl}" alt="商品画像">
+                        </td>
+                        <td>
+                            <a th:href="@{/admin/product/delete/{id}(id=${product.id})}"
+                                class="btn btn-danger btn-sm">削除</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
         <!-- ページネーション -->
         <nav th:if="${totalPages > 1}">
