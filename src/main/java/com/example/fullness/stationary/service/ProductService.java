@@ -24,14 +24,6 @@ public class ProductService {
         return categoryMapper.findAll();
     }
 
-    // 商品検索（カテゴリIDで絞り込み）
-    // public List<Product> searchProducts(Long categoryId) {
-    // if (categoryId == null || categoryId == 0) {
-    // return productMapper.findAll();
-    // }
-    // return productMapper.findByCategoryId(categoryId);
-    // }
-
     public List<Product> geProductsByCategoryWithPaging(Long id, int page, int pageSize) {
         int offset = (page - 1) * pageSize;
 
