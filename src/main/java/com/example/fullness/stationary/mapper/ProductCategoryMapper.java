@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.example.fullness.stationary.entity.Category;
+import com.example.fullness.stationary.entity.ProductCategory;
 
 /**
  * カテゴリテーブルへのデータアクセスを定義する Mapper。
@@ -14,14 +14,14 @@ import com.example.fullness.stationary.entity.Category;
  * MyBatis により SQL を呼び出し、カテゴリ情報の取得と保存を担当する。
  */
 @Mapper
-public interface CategoryMapper {
+public interface ProductCategoryMapper {
 
     /**
      * 全カテゴリ一覧を取得する。
      *
      * @return 全カテゴリ一覧
      */
-    List<Category> findAll();
+    List<ProductCategory> findAll();
 
     /**
      * カテゴリIDをもとに単一カテゴリを取得する。
@@ -29,7 +29,7 @@ public interface CategoryMapper {
      * @param id カテゴリID
      * @return カテゴリ情報
      */
-    Category findById(Long id);
+    ProductCategory findById(Long id);
 
     /**
      * カテゴリを新規登録する。
@@ -37,5 +37,5 @@ public interface CategoryMapper {
      * @param category 登録対象のカテゴリ情報
      * @return 登録件数
      */
-    int insert(Category category);
+    int insert(ProductCategory category);
 }

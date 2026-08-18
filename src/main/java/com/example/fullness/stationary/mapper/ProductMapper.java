@@ -12,7 +12,7 @@ import com.example.fullness.stationary.entity.Product;
  *
  * <p>
  * MyBatis により SQL を実行し、商品一覧取得、カテゴリ別絞り込み、件数取得、
- * 単一商品の取得、登録、削除処理を担当する。
+ * 単一商品の取得、登録、削除処理（担当ではない）を担当する。
  *
  * <p>
  * 画面表示や業務処理で必要とされる商品情報を SQL ベースで取得・更新する責務を持つ。
@@ -72,10 +72,10 @@ public interface ProductMapper {
          */
         void insert(Product product);
 
-        // /**
-        // * 商品IDをもとに商品を削除する。
-        // *
-        // * @param id 削除対象の商品ID
-        // */
-        // void deleteById(Long id);
+        /**
+         * 商品IDをもとに商品を削除する。
+         *
+         * @param id 削除対象の商品ID
+         */
+        void deleteById(Long id);
 }

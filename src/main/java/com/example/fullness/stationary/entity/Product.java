@@ -9,7 +9,7 @@ import lombok.Data;
  *
  * <p>
  * 商品の識別子、所属カテゴリ、商品名、価格、画像URL、削除状態を保持する。
- * DB の product テーブルと対応し、画面表示・登録・更新・削除処理の主要データとして利用される。
+ * DB の product テーブルと対応し、画面表示・登録・更新・削除処理のデータとして利用される。
  */
 @Data
 public class Product implements Serializable {

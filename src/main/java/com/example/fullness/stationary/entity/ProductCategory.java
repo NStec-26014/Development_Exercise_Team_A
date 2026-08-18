@@ -12,9 +12,7 @@ import lombok.Data;
  * 商品一覧画面の検索条件や画面表示用の選択肢として利用される。
  */
 @Data
-public class Category implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class ProductCategory implements Serializable {
 
     private Long id; // 主キー（product_categoryテーブルのid）
     private String name; // カテゴリ名（例: "ペン", "ノート"）
@@ -23,7 +21,7 @@ public class Category implements Serializable {
      * デフォルトコンストラクタ。
      * MyBatis のマッピング処理で利用される。
      */
-    public Category() {
+    public ProductCategory() {
     }
 
     /**
@@ -31,7 +29,7 @@ public class Category implements Serializable {
      *
      * @param name カテゴリ名
      */
-    public Category(String name) {
+    public ProductCategory(String name) {
         this.name = name;
     }
 
@@ -41,7 +39,7 @@ public class Category implements Serializable {
      * @param id   カテゴリID
      * @param name カテゴリ名
      */
-    public Category(Long id, String name) {
+    public ProductCategory(Long id, String name) {
         this.id = id;
         this.name = name;
     }

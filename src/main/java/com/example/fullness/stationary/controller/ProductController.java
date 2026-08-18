@@ -10,8 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.example.fullness.stationary.entity.Category;
+import com.example.fullness.stationary.entity.ProductCategory;
 import com.example.fullness.stationary.entity.Product;
+import com.example.fullness.stationary.service.ProductCategoryService;
 import com.example.fullness.stationary.service.ProductService;
 
 /**
@@ -36,6 +37,9 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private ProductCategoryService productCategoryService;
 
     /**
      * 商品一覧画面を表示する。
@@ -62,10 +66,10 @@ public class ProductController {
 
         int pageSize = 10;
         // 1. カテゴリ一覧取得
-        List<Category> categories = productService.getAllCategories();
+        List<ProductCategory> categories = productCategoryService.getAllCategories();
 
         // 2. 商品検索
-        List<Product> products = productService.geProductsByCategoryWithPaging(category, page, pageSize);
+        List<Product> products = productService.getProductsByCategoryWithPaging(category, page, pageSize);
 
         int totalCount = productService.countProductsByCategory(category);
         int totalPages = (int) Math.ceil((double) totalCount / pageSize);

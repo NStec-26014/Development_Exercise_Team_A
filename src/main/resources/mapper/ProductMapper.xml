@@ -57,19 +57,13 @@
         ]]>
     </select>
 
-    <insert id="insert" parameterType="com.example.fullness.stationary.entity.Product">
-    <![CDATA[ 
-        INSERT INTO product (product_category_id, name, price, image_url, delete_flag)
-        VALUES (#{productCategoryId}, #{name}, #{price}, #{imageUrl}, #{deleteFlag})
-        ]]>
-    </insert>
 
-    <update id="deleteById" parameterType="long">
+    <!-- <update id="deleteById" parameterType="long">
     <![CDATA[ 
         UPDATE product
         SET delete_flag = 1
         WHERE id = #{id}
         ]]>
-    </update>
+    </update> -->
 
 </mapper>
