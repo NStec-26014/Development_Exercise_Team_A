@@ -65,17 +65,17 @@ public interface ProductMapper {
          */
         Product findById(Long id);
 
-        /**
-         * 商品を新規登録する。
-         *
-         * @param product 登録対象の商品情報
-         */
-        void insert(Product product);
+        // /**
+        // * 商品を新規登録する。
+        // *
+        // * @param product 登録対象の商品情報
+        // */
+        // void insert(Product product);
 
-        /**
-         * 商品IDをもとに商品を削除する。
-         *
-         * @param id 削除対象の商品ID
-         */
-        void deleteById(Long id);
+        // /**
+        // * 商品IDをもとに商品を削除する。
+        // *
+        // * @param id 削除対象の商品ID
+        // */
+        // void deleteById(Long id);
 }

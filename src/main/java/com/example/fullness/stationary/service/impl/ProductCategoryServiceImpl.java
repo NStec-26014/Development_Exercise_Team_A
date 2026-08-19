@@ -50,8 +50,9 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
      *
      * @param category 登録対象のカテゴリ情報
      */
-    @Override
-    public void saveCategory(ProductCategory category) {
-        categoryMapper.insert(category);
-    }
+    // @Override
+    // public void saveCategory(ProductCategory category) {
+    // categoryMapper.insert(category);
+    // }
+
 }

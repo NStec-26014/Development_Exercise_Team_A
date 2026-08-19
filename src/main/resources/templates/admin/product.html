@@ -31,8 +31,8 @@
             <table class="table table-bordered table-striped text-center align-middle">
                 <thead class="table-dark">
                     <tr>
-                        <th>ID</th>
-                        <th>カテゴリ</th>
+                        <!-- <th>ID</th>
+                        <th>カテゴリ</th> -->
                         <th>商品名</th>
                         <th>単価</th>
                         <!-- <th>画像</th> -->
@@ -41,8 +41,8 @@
                 </thead>
                 <tbody>
                     <tr th:each="product : ${products}">
-                        <td th:text="${product.id}"></td>
-                        <td th:text="${product.productCategoryId}"></td>
+                        <!-- <td th:text="${product.id}"></td>
+                        <td th:text="${product.productCategoryId}"></td> -->
                         <td th:text="${product.name}"></td>
                         <td th:text="${product.price}"></td>
                         <td>

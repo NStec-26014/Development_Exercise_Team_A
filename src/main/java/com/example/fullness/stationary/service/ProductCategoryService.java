@@ -20,10 +20,10 @@ public interface ProductCategoryService {
      */
     List<ProductCategory> getAllCategories();
 
-    /**
-     * カテゴリを登録する。
-     *
-     * @param category 登録対象のカテゴリ情報
-     */
-    void saveCategory(ProductCategory category);
+    // /**
+    // * カテゴリを登録する。
+    // *
+    // * @param category 登録対象のカテゴリ情報
+    // */
+    // void saveCategory(ProductCategory category);
 }

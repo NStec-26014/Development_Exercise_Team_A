@@ -78,6 +78,7 @@ public class ProductController {
         model.addAttribute("products", products);
         model.addAttribute("selectedCategory", category);
         model.addAttribute("totalPages", totalPages);
+        model.addAttribute("currentPage", page);
 
         // 4. テンプレート名を返す
         return "admin/product"; // → templates/admin/product.html
