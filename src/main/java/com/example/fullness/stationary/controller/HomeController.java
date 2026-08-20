@@ -1,13 +1,13 @@
-package com.example.fullness.stationary.controller;
+// package com.example.fullness.stationary.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+// import org.springframework.stereotype.Controller;
+// import org.springframework.web.bind.annotation.GetMapping;
 
-@Controller
-public class HomeController {
+// @Controller
+// public class HomeController {
 
-    @GetMapping("/")
-    public String home() {
-        return "redirect:/admin/product";
-    }
-}
+// @GetMapping("/")
+// public String home() {
+// return "redirect:/admin/product";
+// }
+// }
