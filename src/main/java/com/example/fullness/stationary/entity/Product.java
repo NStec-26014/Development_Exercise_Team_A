@@ -16,6 +16,8 @@ public class Product implements Serializable {
     private String imageUrl; // 画像URL（例: "/images/pen_red.png"）
     private Integer deleteFlag; // 論理削除フラグ（0有効, 1削除済み）
 
+    private Integer quantity; // 在庫数（例: 100）
+
     public Product() {
     }
 

@@ -47,6 +47,11 @@ public class ProductService {
         productMapper.deleteById(id);
     }
 
+    // 商品修正
+    public void editProduct(Product product) {
+        productMapper.edit(product);
+    }
+
     // 商品詳細取得
     public Product findById(Long id) {
         return productMapper.findById(id);
