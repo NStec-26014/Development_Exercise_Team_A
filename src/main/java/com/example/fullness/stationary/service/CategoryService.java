@@ -31,6 +31,6 @@ public class CategoryService {
     public boolean isDuplicate(String categoryName) {
         Category existingCategory = categoryMapper.findByCategoryName(categoryName);
         return existingCategory != null;
-        }
+    }
 
 }
