@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>商品管理</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 24px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 18px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background: #f2f2f2;
+        }
+
+        .actions {
+            display: inline-block;
+            margin-left: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>商品管理</h1>
+
+    <form method="get" action="" th:action="@{/admin/product}">
+        <label for="category">カテゴリ:</label>
+        <select id="category" name="category">
+            <option th:value="0" th:selected="${selectedCategory == 0}">すべて</option>
+            <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"
+                th:selected="${category.id == selectedCategory}">
+            </option>
+        </select>
+        <button type="submit">絞り込み</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>カテゴリID</th>
+                <th>商品名</th>
+                <th>価格</th>
+                <th>画像URL</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="product : ${products}">
+                <td th:text="${product.id}"></td>
+                <td th:text="${product.productCategoryId}"></td>
+                <td th:text="${product.name}"></td>
+                <td th:text="${product.price}"></td>
+                <td th:text="${product.imageUrl}"></td>
+                <td>
+                    <form th:action="@{/admin/product/delete}" method="post" style="display:inline;">
+                        <input type="hidden" name="id" th:value="${product.id}" />
+                        <input type="hidden" name="category" th:value="${selectedCategory}" />
+                        <button type="submit" onclick="return confirm('本当に削除しますか？');">削除</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(products)}">
+                <td colspan="6">該当する商品がありません。</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>
