@@ -52,8 +52,8 @@
     <select id="findById" parameterType="long" resultMap="ProductResult">
     <![CDATA[ 
         SELECT id, product_category_id, name, price, image_url, delete_flag
-        WHERE id = #{id}
         FROM product
+        WHERE id = #{id}
         ]]>
     </select>
 
