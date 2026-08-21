@@ -13,6 +13,13 @@ import com.example.fullness.stationary.entity.Product;
 import com.example.fullness.stationary.mapper.CategoryMapper;
 import com.example.fullness.stationary.mapper.ProductMapper;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.stereotype.Service;
+
+import com.example.fullness.stationary.entity.Product;
+import com.example.fullness.stationary.mapper.ProductMapper;
+
 @ExtendWith(MockitoExtension.class)
 class ProductServiceTest {
 
@@ -45,6 +52,22 @@ class ProductServiceTest {
         productService.editProduct(product);
 
         verify(productMapper).edit(product);
+
+
+
+    // @InjectMocks
+    // private ProductService productService;
+    // @Mock
+    // private ProductMapper productMapper;
+
+    @Test
+    void saveProduct_shouldDelegateToProductMapper() {
+
+        Product product = new Product();
+
+        productService.saveProduct(product);
+
+        verify(productMapper).insert(product);
     }
 
 }

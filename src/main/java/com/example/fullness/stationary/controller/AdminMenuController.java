@@ -7,8 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class AdminMenuController {
 
     @GetMapping("/admin")
-    public String showAdminMenu() {
-        return "admin/menu"; // → templates/admin/menu.html
+    public String menu() {
+
+        return "admin/menu";
     }
 
 }
