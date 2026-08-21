@@ -21,7 +21,7 @@
             <tr><th>商品カテゴリ</th><td th:each="cat : ${categories}" th:if="${cat.id == form.productCategoryId}" th:text="${cat.name}"></td></tr>
             </tbody>
         </table>
-        <img th:src="@{${form.imageUrl}}" th:alt="${form.name}" class="img-fluid mb-4" style="max-height: 160px;">
+        <!-- <img th:src="@{${form.imageUrl}}" th:alt="${form.name}" class="img-fluid mb-4" style="max-height: 160px;"> -->
 
         <!-- 💡 ①「戻る」ボタン専用の送信フォーム（宛先はconfirmのまま） -->
     <form th:action="@{/admin/product/edit/confirm}" method="post" style="display: inline;">
