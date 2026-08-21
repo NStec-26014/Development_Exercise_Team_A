@@ -32,12 +32,13 @@ public class Product implements Serializable {
 
     // DB取得データ用
     public Product(Long id, Long productCategoryId, String name, Integer price,
-            String imageUrl, Integer deleteFlag) {
+            String imageUrl, Integer deleteFlag, Integer quantity) {
         this.id = id;
         this.productCategoryId = productCategoryId;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
         this.deleteFlag = deleteFlag;
+        this.quantity = quantity; 
     }
 }

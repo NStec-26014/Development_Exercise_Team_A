@@ -102,6 +102,7 @@ public class ProductController {
         product.setPrice(form.getPrice());
         product.setProductCategoryId(form.getProductCategoryId());
         product.setImageUrl(form.getImageUrl());
+        product.setQuantity(form.getQuantity());
 
         product.setDeleteFlag(0);
 
@@ -134,6 +135,7 @@ public class ProductController {
             product.setDeleteFlag(0);
             product.setProductCategoryId(form.getProductCategoryId());
             product.setImageUrl(form.getImageUrl());
+            product.setQuantity(form.getQuantity());
 
             // データベースを更新します
             productService.editProduct(product);
@@ -180,7 +182,7 @@ public class ProductController {
     }
 
     
-        // 💡 完了画面（edit_complete.html）を表示するための設定
+        // 💡 完了画面（edit_complete.html）を表示するための設定で
     @GetMapping("/edit/complete")
     public String showEditCompletePage() {
         // templates/admin/edit_complete.html を表示する
