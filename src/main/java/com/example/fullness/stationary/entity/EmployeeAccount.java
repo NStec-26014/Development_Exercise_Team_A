@@ -1,54 +1,17 @@
-
-
 package com.example.fullness.stationary.entity;
 
+import lombok.Data;
 
-public class EmployeeAccount{
+import java.io.Serializable;
+ 
+@Data
+public class EmployeeAccount implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private Integer id;
-
     private Integer employeeId;
-
     private String name;
-
     private String password;
-
-    public Integer getId() { 
-        return id;
-    }
-
-    public void setId(Integer id) { 
-        this.id = id;
-
-    }
-
-    public Integer getEmployeeId() { 
-        return employeeId;
-
-    }
-
-    public void setEmployeeId(Integer employeeId) { 
-        this.employeeId = employeeId;
-
-    }
-
-    public String getName() { 
-        return name;
-
-    }
-
-    public void setName(String name) { 
-        this.name = name;
-
-    }
-
-    public String getPassword() { 
-        return password;
-
-    }
-
-    public void setPassword(String password) { 
-        this.password = password; 
-    } 
 
 }

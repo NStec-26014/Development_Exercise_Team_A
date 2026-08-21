@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.fullness.stationary.mapper.EmployeeAccountMapper">
+    
+    <!-- ResultMap定義 -->
+    <resultMap id="EmployeeAccountResultMap" type="com.example.fullness.stationary.entity.EmployeeAccount">
+        <id property="id" column="id"/>
+        <result property="employeeId" column="employee_id"/>
+        <result property="name" column="name"/>
+        <result property="password" column="password"/>
+    </resultMap> 
+    
+    <!-- アカウント名でアカウント情報を取得 -->
+    <select id="selectByName" resultMap="EmployeeAccountResultMap">
+        SELECT
+            id,
+            employee_id,
+            name,
+            password
+        FROM employee_account
+        WHERE name = #{name}
+    </select>
+    
+</mapper>
