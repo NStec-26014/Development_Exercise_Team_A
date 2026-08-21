@@ -24,4 +24,11 @@
         VALUES (#{name})
     </insert>
 
+        <select id="findByCategoryName" resultMap="CategoryResult">
+        SELECT id, name
+        FROM product_category
+        WHERE name = #{categoryName}
+    </select>
+
+
 </mapper>
