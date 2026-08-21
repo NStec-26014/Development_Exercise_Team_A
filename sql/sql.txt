@@ -1,0 +1,141 @@
+-- 顧客 (customer)
+CREATE TABLE customer (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(20),
+    name_kana VARCHAR(20),
+    address1 VARCHAR(100),
+    address2 VARCHAR(100),
+    phone_number VARCHAR(20),
+    mail_address VARCHAR(200),
+    username VARCHAR(30),
+    password VARCHAR(200),
+    register_date TIMESTAMP
+);
+
+-- 部署 (department)
+CREATE TABLE department (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100)
+);
+
+-- 商品カテゴリ (product_category)
+CREATE TABLE product_category (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(20)
+);
+
+-- 注文ステータス (order_status)
+CREATE TABLE order_status (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100)
+);
+
+-- 支払い方法 (payment_method)
+CREATE TABLE payment_method (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100)
+);
+
+
+-- 社員 (employee)
+CREATE TABLE employee (
+    id SERIAL PRIMARY KEY,
+    department_id INTEGER REFERENCES department(id),
+    name VARCHAR(100),
+    name_kana VARCHAR(100)
+);
+
+-- 社員アカウント (employee_account)
+CREATE TABLE employee_account (
+    id SERIAL PRIMARY KEY,
+    employee_id INTEGER REFERENCES employee(id),
+    name VARCHAR(20),
+    password VARCHAR(200)
+);
+
+-- 商品 (product)
+CREATE TABLE product (
+    id SERIAL PRIMARY KEY,
+    product_category_id INTEGER REFERENCES product_category(id),
+    name VARCHAR(20),
+    price INTEGER,
+    image_url VARCHAR(200),
+    delete_flag INTEGER
+);
+
+-- 商品在庫 (product_stock)
+CREATE TABLE product_stock (
+    id SERIAL PRIMARY KEY,
+    product_id INTEGER REFERENCES product(id),
+    quantity INTEGER
+);
+
+-- 注文 (orders)
+CREATE TABLE orders (
+    id SERIAL PRIMARY KEY,
+    customer_id INTEGER REFERENCES customer(id),
+    order_status_id INTEGER REFERENCES order_status(id),
+    payment_method_id INTEGER REFERENCES payment_method(id),
+    order_date TIMESTAMP,
+    amount_total INTEGER
+);
+
+-- 注文明細 (order_detail)
+CREATE TABLE order_detail (
+    id SERIAL PRIMARY KEY,
+    order_id INTEGER REFERENCES orders(id),
+    product_id INTEGER REFERENCES product(id),
+    customer_id INTEGER REFERENCES customer(id),
+    count INTEGER
+);
+
+insert into department values
+(1, '営業部'), (2, '人事部'), (3, '企画部');
+
+insert into employee values
+(1001, 1, 'フルネス太郎', 'フルネスタロウ'),
+(1002, 2, '山田太郎', 'ヤマダタロウ'),
+(1003, 3, '佐藤次郎', 'サトウジロウ');
+
+insert into employee_account values
+(102, 1002, 'fullness2', 'f144784fe5a8f72f3bdfb9ca32f3b8e70816e4da40faa13e942460105fc35603cea2abce47573e580fe7c98d51e2a203c0b7071b967a196d701f694742456305'),
+(103, 1003, 'fullness3', 'c57af6acd252fa21fde4552efed53673cb21daa6063d6a77a97682cf98764e87be33a63cf3f4659c3a86548be5df7e427261662146395eaf4332716d30b82d88');
+
+insert into product_category values
+(1, '文房具'), (2, 'その他');
+
+insert into product values
+(1001, 1, '水性ボールペン(黒)', 120, '/images/red_pen.jpg', 0),
+(1002, 1, '水性ボールペン(赤)', 120, '/images/red_pen.jpg', 0),
+(1003, 1, '水性ボールペン(青)', 120, '/images/red_pen.jpg', 0),
+(1004, 1, '水性ボールペン(緑)', 120, '/images/red_pen.jpg', 0),
+(1005, 1, '水性ボールペン(黄)', 120, '/images/red_pen.jpg', 0),
+(1006, 1, 'シャーペン', 100, '/images/red_pen.jpg', 0),
+(1007, 1, '消しゴム', 50, '/images/red_pen.jpg', 0),
+(1008, 1, '修正テープ', 300, '/images/red_pen.jpg', 0),
+(1009, 1, '鉛筆', 80, '/images/red_pen.jpg', 0),
+(1010, 1, '定規', 100, '/images/red_pen.jpg', 0),
+(1011, 1, '蛍光ペン(黄)', 130, '/images/red_pen.jpg', 0),
+(1012, 1, '蛍光ペン(オレンジ)', 130, '/images/red_pen.jpg', 0),
+(1013, 1, '蛍光ペン(緑)', 130, '/images/red_pen.jpg', 0),
+(1014, 1, '蛍光ペン(ピンク)', 130, '/images/red_pen.jpg', 0),
+(1015, 1, '蛍光ペン(青)', 130, '/images/red_pen.jpg', 0),
+(1016, 1, '分度器', 200, '/images/red_pen.jpg', 0),
+(1017, 1, 'セロテープ', 200, '/images/red_pen.jpg', 0),
+(1018, 1, '付箋', 150, '/images/red_pen.jpg', 0),
+(1019, 1, 'ノート', 200, '/images/red_pen.jpg', 0),
+(1020, 1, 'ルーズリーフ', 220, '/images/red_pen.jpg', 0),
+(1021, 1, '色鉛筆(赤)', 100, '/images/red_pen.jpg', 0),
+(1022, 1, '色鉛筆(青)', 100, '/images/red_pen.jpg', 0),
+(1023, 1, '色鉛筆(黒)', 100, '/images/red_pen.jpg', 0),
+(1024, 1, '色鉛筆(黄)', 100, '/images/red_pen.jpg', 0),
+(1025, 1, '色鉛筆(緑)', 100, '/images/red_pen.jpg', 0),
+(1026, 1, 'ホチキス', 300, '/images/red_pen.jpg', 0),
+(1027, 1, 'ホチキスの芯', 150, '/images/red_pen.jpg', 0),
+(1028, 1, 'マーカー(黒)', 150, '/images/red_pen.jpg', 0),
+(1029, 1, 'マーカー(赤)', 150, '/images/red_pen.jpg', 0),
+(1030, 1, 'マーカー(青)', 150, '/images/red_pen.jpg', 0);
+
+insert into product values
+(2001, 2, 'ハンカチ', 200, '/images/red_pen.jpg', 0),
+(2002, 2, 'ティッシュ', 100, '/images/red_pen.jpg', 0);
