@@ -8,26 +8,20 @@
     </resultMap>
 
     <select id="findAll" resultMap="CategoryResult">
-     <![CDATA[ 
         SELECT id, name
         FROM product_category
         ORDER BY id
-        ]]>
     </select>
 
     <select id="findById" parameterType="long" resultMap="CategoryResult">
-     <![CDATA[ 
         SELECT id, name
         FROM product_category
         WHERE id = #{id}
-        ]]>
     </select>
 
     <insert id="insert" parameterType="com.example.fullness.stationary.entity.Category" useGeneratedKeys="true" keyProperty="id">
-     <![CDATA[ 
         INSERT INTO product_category (name)
         VALUES (#{name})
-        ]]>
     </insert>
 
 </mapper>
