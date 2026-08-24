@@ -26,18 +26,18 @@
                     </tr>
                     <tr>
                         <th>在庫数</th>
-                        <td th:text="${product.stock}"></td>
+                        <td th:text="${product.quantity}"></td>
                     </tr>
                     <tr>
                         <th>商品カテゴリ</th>
-                        <td th:text="${product.categoryName}"></td>
+                        <td th:text="${categoryName}"></td>
                     </tr>
                 </tbody>
             </table>
-            <img th:src="@{${product.imagePath}}" th:alt="${product.name}" class="img-fluid mb-4"
-                style="max-height: 180px;">
+            <!-- <img th:src="@{${product.imagePath}}" th:alt="${product.name}" class="img-fluid mb-4"
+                style="max-height: 180px;"> -->
 
-            <form th:action="@{/admin/product/delete/{id}(id=${product.id})}" method="post">
+            <form th:action="@{/admin/product/delete/doDelete}" method="post">
                 <a th:href="@{/admin/product}" class="btn btn-link link-fs">キャンセル</a>
                 <button type="submit" class="btn btn-fs-solid px-4">完了</button>
             </form>

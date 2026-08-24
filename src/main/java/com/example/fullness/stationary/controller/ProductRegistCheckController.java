@@ -16,7 +16,7 @@ import com.example.fullness.stationary.entity.Category;
 import com.example.fullness.stationary.entity.Product;
 import com.example.fullness.stationary.form.ProductRegistForm;
 import com.example.fullness.stationary.mapper.CategoryMapper;
-import com.example.fullness.stationary.service.CategoryService;
+import com.example.fullness.stationary.service.Impl.CategoryServiceImpl;
 import com.example.fullness.stationary.service.Impl.ProductServiceImpl;
 
 @Controller
@@ -27,7 +27,7 @@ public class ProductRegistCheckController {
     @Autowired
     private ProductServiceImpl productService;
     @Autowired
-    private CategoryService categoryService;
+    private CategoryServiceImpl categoryServiceImpl;
 
     // 確認画面表示処理
     @GetMapping("/add/confirm")
@@ -43,7 +43,7 @@ public class ProductRegistCheckController {
         Integer id = form.getProductCategoryId();
 
         if (id != null) {
-            Category category = categoryService.findById(id.longValue());
+            Category category = categoryServiceImpl.findById(id.longValue());
 
             if (category != null) {
                 form.setCategoryName(category.getName());

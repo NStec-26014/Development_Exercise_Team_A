@@ -71,7 +71,7 @@
         ]]>
     </update>
 
-    <update id="deleteById" resultType="int">
+    <update id="deleteById" parameterType="product">
         <![CDATA[ 
         UPDATE product
         SET delete_flag = 1

@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.fullness.stationary.entity.Category;
 import com.example.fullness.stationary.entity.Product;
 import com.example.fullness.stationary.form.ProductEditForm;
+import com.example.fullness.stationary.service.Impl.CategoryServiceImpl;
 import com.example.fullness.stationary.service.Impl.ProductServiceImpl;
 import com.example.fullness.stationary.validator.ProductEditValidator;
 
@@ -32,6 +33,9 @@ public class ProductController {
 
     @Autowired
     private ProductEditValidator productEditValidator;
+
+    @Autowired
+    private CategoryServiceImpl categoryServiceImpl;
 
     @ModelAttribute("productEditForm")
     public ProductEditForm productEditForm() {
@@ -79,27 +83,34 @@ public class ProductController {
     @GetMapping("/delete/{id}")
     public String ShowProductDeleteConfirm(@PathVariable("id") Long id, HttpSession session, Model model) {
         // Product型の情報をidを基に取得して追加する
-        session.setAttribute("product", productServiceImpl.findById(id));
+        model.addAttribute("product", productServiceImpl.findById(id));
+        String categoryName = categoryServiceImpl.findById(productServiceImpl.findById(id).getProductCategoryId())
+                .getName();
+        model.addAttribute("categoryName", categoryName);
+        session.setAttribute("deleteId", id);
+        session.setAttribute("deleteName", productServiceImpl.findById(id).getName());
+
         // 確認画面に遷移する
-        return ("delete_confirm");
+        return ("admin/product/delete_confirm");
     }
 
     // 削除を実行するメソッド
     @PostMapping("/delete/doDelete")
-    public String doDeleteProduct() {
+    public String doDeleteProduct(HttpSession session) {
         // 削除が完了（true）が返ってきたときに完了画面に遷移する
-        boolean success = productServiceImpl.deleteProduct(null);// nullにセッションから取得した削除したいid
-        if (success = true) {
-            return ("redirect;/admin/product/delete/complete");
+        boolean success = productServiceImpl.deleteProduct((Long) session.getAttribute("deleteId"));// nullにセッションから取得した削除したいid
+        if (success) {
+            return ("redirect:/admin/product/delete/complete");
         }
         return "/error";// エラー画面遷移を後で書く
     }
 
     // 完了画面を表示するメソッド
     @GetMapping("/delete/complete")
-    public String ShowProductDeleteComplete() {
+    public String ShowProductDeleteComplete(HttpSession session) {
+        // 商品名がnullになる
         // 完了画面に遷移する
-        return ("delete_complete");
+        return ("admin/product/delete_complete");
     }
 
     @PostMapping("/edit")
