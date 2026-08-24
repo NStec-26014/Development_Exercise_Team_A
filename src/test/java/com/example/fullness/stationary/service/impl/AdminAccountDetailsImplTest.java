@@ -24,7 +24,21 @@ class AdminAccountDetailsImplTest {
     private AdminAccountDetailsImpl adminAccountDetailsImpl;
 
     @Test
-    void loadUserByUsername_shouldCallMapperAndReturnUserDetails() {
+    void CallEmployeeAccountMapper() {
+        String username = "fullness2";
+        EmployeeAccount account = new EmployeeAccount();
+        account.setId(100);
+        account.setEmployeeId(1002);
+        account.setName(username);
+        account.setPassword("hashed-password");
+
+        when(employeeAccountMapper.selectByName(username)).thenReturn(account);
+        adminAccountDetailsImpl.loadUserByUsername(username);
+        verify(employeeAccountMapper, times(1)).selectByName(username);
+    }
+
+    @Test
+    void loadUserByUsernameReturnUserDetails() {
         Integer id = 100;
         Integer employeeId = 1002;
         String username = "fullness2";
@@ -47,5 +61,7 @@ class AdminAccountDetailsImplTest {
 
         verify(employeeAccountMapper, times(1)).selectByName(username);
     }
+
+    
 
 }

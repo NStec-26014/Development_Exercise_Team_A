@@ -19,7 +19,7 @@ class EmployeeAccountMapperTest {
     private EmployeeAccountMapper employeeAccountMapper;
 
     @Test
-    void selectByName_returnAccount() {
+    void selectByNameReturnAccount() {
         EmployeeAccount account = employeeAccountMapper.selectByName("fullness2");
 
         assertThat(account).isNotNull();

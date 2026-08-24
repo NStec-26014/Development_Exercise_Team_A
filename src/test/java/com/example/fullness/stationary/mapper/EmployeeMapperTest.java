@@ -19,7 +19,7 @@ class EmployeeMapperTest {
     private EmployeeMapper employeeMapper;
 
     @Test
-    void selectById_returnEmployee() {
+    void selectByIdReturnEmployee() {
         Employee employee = employeeMapper.selectById(1002);
 
         assertThat(employee).isNotNull();

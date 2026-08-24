@@ -44,7 +44,7 @@ public class SecurityConfig {
         
         return http.build();
     }
-           @Bean
+    @Bean
     public AuthenticationFailureHandler customAuthenticationFailureHandler() {
         return (request, response, exception) -> {
             String accountName = request.getParameter("accountName");
