@@ -16,7 +16,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.fullness.stationary.form.ProductRegistForm;
-import com.example.fullness.stationary.service.ProductService;
+import com.example.fullness.stationary.service.Impl.ProductServiceImpl;
 import com.example.fullness.stationary.validator.ProductRegistValidator;
 
 @Controller
@@ -25,7 +25,7 @@ import com.example.fullness.stationary.validator.ProductRegistValidator;
 public class ProductRegistInputController {
 
     @Autowired
-    private ProductService productService;
+    private ProductServiceImpl productService;
     @Autowired
     private ProductRegistValidator productResistValidator; // 依存注入
 

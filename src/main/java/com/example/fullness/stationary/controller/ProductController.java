@@ -18,15 +18,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.fullness.stationary.entity.Category;
 import com.example.fullness.stationary.entity.Product;
 import com.example.fullness.stationary.form.ProductEditForm;
-import com.example.fullness.stationary.service.ProductService;
+import com.example.fullness.stationary.service.Impl.ProductServiceImpl;
 import com.example.fullness.stationary.validator.ProductEditValidator;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/admin/product")
 public class ProductController {
 
     @Autowired
-    private ProductService productService;
+    private ProductServiceImpl productServiceImpl;
 
     @Autowired
     private ProductEditValidator productEditValidator;
@@ -47,10 +49,10 @@ public class ProductController {
 
             Model model) {
         // 1. カテゴリ一覧取得
-        List<Category> categories = productService.getAllCategories();
+        List<Category> categories = productServiceImpl.getAllCategories();
 
         // 2. 商品検索
-        List<Product> products = productService.searchProducts(category);
+        List<Product> products = productServiceImpl.searchProducts(category);
 
         // 3. Modelにデータを詰める
         model.addAttribute("categories", categories);
@@ -61,16 +63,43 @@ public class ProductController {
         return "admin/search"; // → templates/admin/search.html
     }
 
-    @PostMapping("/delete")
-    public String deleteProduct(
-            @RequestParam Long id, // 削除対象の商品ID
-            @RequestParam(required = false, defaultValue = "0") Long category) {
+    // @PostMapping("/delete")
+    // public String deleteProduct(
+    // @RequestParam Long id, // 削除対象の商品ID
+    // @RequestParam(required = false, defaultValue = "0") Long category) {
 
-        // 消すとき
-        productService.deleteProduct(id);
+    // // 消すとき
+    // productService.deleteProduct(id);
 
-        // リダイレクト（削除後、同じカテゴリの一覧に戻る）
-        return "redirect:/admin/product?category=" + category;
+    // // リダイレクト（削除後、同じカテゴリの一覧に戻る）
+    // return "redirect:/admin/product?category=" + category;
+    // }
+
+    // 確認画面を表示するメソッド
+    @GetMapping("/delete/{id}")
+    public String ShowProductDeleteConfirm(@PathVariable("id") Long id, HttpSession session, Model model) {
+        // Product型の情報をidを基に取得して追加する
+        session.setAttribute("product", productServiceImpl.findById(id));
+        // 確認画面に遷移する
+        return ("delete_confirm");
+    }
+
+    // 削除を実行するメソッド
+    @PostMapping("/delete/doDelete")
+    public String doDeleteProduct() {
+        // 削除が完了（true）が返ってきたときに完了画面に遷移する
+        boolean success = productServiceImpl.deleteProduct(null);// nullにセッションから取得した削除したいid
+        if (success = true) {
+            return ("redirect;/admin/product/delete/complete");
+        }
+        return "/error";// エラー画面遷移を後で書く
+    }
+
+    // 完了画面を表示するメソッド
+    @GetMapping("/delete/complete")
+    public String ShowProductDeleteComplete() {
+        // 完了画面に遷移する
+        return ("delete_complete");
     }
 
     @PostMapping("/edit")
@@ -83,8 +112,8 @@ public class ProductController {
         productEditValidator.validate(form, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            List<Category> categories = productService.getAllCategories();
-            List<Product> products = productService.searchProducts(category);
+            List<Category> categories = productServiceImpl.getAllCategories();
+            List<Product> products = productServiceImpl.searchProducts(category);
             model.addAttribute("categories", categories);
             model.addAttribute("products", products);
             model.addAttribute("selectedCategory", category);
@@ -93,7 +122,7 @@ public class ProductController {
 
         // ⭕ ここから下に2行追加します！
         // 確認画面でもカテゴリの一覧情報が必要なので、データベースから取得してModelに詰めます
-        List<Category> categories = productService.getAllCategories();
+        List<Category> categories = productServiceImpl.getAllCategories();
         model.addAttribute("categories", categories);
 
         Product product = new Product();
@@ -106,7 +135,7 @@ public class ProductController {
 
         product.setDeleteFlag(0);
 
-        productService.editProduct(product);
+        productServiceImpl.editProduct(product);
 
         model.addAttribute("form", form);
         return "admin/product/edit_confirm";
@@ -121,7 +150,7 @@ public class ProductController {
             Model model) {
         // 1. 💡 もし「戻る」ボタン（value="back"）が押されていた場合
         if ("back".equals(action)) {
-            model.addAttribute("categories", productService.getAllCategories());
+            model.addAttribute("categories", productServiceImpl.getAllCategories());
             model.addAttribute("form", form); // 入力内容をそのままキープ
             return "admin/product/edit_form"; // ➔ 入力画面（edit_form）へ戻します！
         }
@@ -138,7 +167,7 @@ public class ProductController {
             product.setQuantity(form.getQuantity());
 
             // データベースを更新します
-            productService.editProduct(product);
+            productServiceImpl.editProduct(product);
 
             // 💡 完了画面の ${productName} に修正後の商品名を届けます！
             redirectAttributes.addFlashAttribute("productName", form.getName());
@@ -157,7 +186,7 @@ public class ProductController {
             @RequestParam(name = "category", required = false, defaultValue = "0") Long category,
             Model model) {
 
-        Product product = productService.findById(id);
+        Product product = productServiceImpl.findById(id);
         if (product == null) {
             return "redirect:/admin/product?category=" + category;
         }
@@ -172,8 +201,8 @@ public class ProductController {
 
         model.addAttribute("form", form);
 
-        List<Category> categories = productService.getAllCategories();
-        List<Product> products = productService.searchProducts(category);
+        List<Category> categories = productServiceImpl.getAllCategories();
+        List<Product> products = productServiceImpl.searchProducts(category);
         model.addAttribute("categories", categories);
         model.addAttribute("products", products);
         model.addAttribute("selectedCategory", category);
@@ -181,14 +210,11 @@ public class ProductController {
         return "admin/product/edit_form";
     }
 
-    
-        // 💡 完了画面（edit_complete.html）を表示するための設定で
+    // 💡 完了画面（edit_complete.html）を表示するための設定で
     @GetMapping("/edit/complete")
     public String showEditCompletePage() {
         // templates/admin/edit_complete.html を表示する
-        return "admin/product/edit_complete"; 
+        return "admin/product/edit_complete";
     }
-
-    
 
 }

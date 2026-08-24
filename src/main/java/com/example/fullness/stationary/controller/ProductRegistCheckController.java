@@ -17,7 +17,7 @@ import com.example.fullness.stationary.entity.Product;
 import com.example.fullness.stationary.form.ProductRegistForm;
 import com.example.fullness.stationary.mapper.CategoryMapper;
 import com.example.fullness.stationary.service.CategoryService;
-import com.example.fullness.stationary.service.ProductService;
+import com.example.fullness.stationary.service.Impl.ProductServiceImpl;
 
 @Controller
 @RequestMapping("/admin/product")
@@ -25,7 +25,7 @@ import com.example.fullness.stationary.service.ProductService;
 public class ProductRegistCheckController {
 
     @Autowired
-    private ProductService productService;
+    private ProductServiceImpl productService;
     @Autowired
     private CategoryService categoryService;
 

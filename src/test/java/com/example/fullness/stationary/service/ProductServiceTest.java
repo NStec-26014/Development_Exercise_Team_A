@@ -13,12 +13,13 @@ import org.springframework.stereotype.Service;
 
 import com.example.fullness.stationary.entity.Product;
 import com.example.fullness.stationary.mapper.ProductMapper;
+import com.example.fullness.stationary.service.Impl.ProductServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 public class ProductServiceTest {
 
     @InjectMocks
-    private ProductService productService;
+    private ProductServiceImpl productService;
     @Mock
     private ProductMapper productMapper;
 

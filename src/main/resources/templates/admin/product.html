@@ -2,83 +2,89 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8" />
-    <title>商品管理</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 24px;
-        }
-
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-top: 18px;
-        }
-
-        th,
-        td {
-            border: 1px solid #ccc;
-            padding: 8px;
-            text-align: left;
-        }
-
-        th {
-            background: #f2f2f2;
-        }
-
-        .actions {
-            display: inline-block;
-            margin-left: 8px;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <title>商品一覧</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 
 <body>
-    <h1>商品管理</h1>
+    <div th:replace="~{admin/fragments/layout :: header}"></div>
+    <div class="container mt-4">
 
-    <form method="get" action="" th:action="@{/admin/product}">
-        <label for="category">カテゴリ:</label>
-        <select id="category" name="category">
-            <option th:value="0" th:selected="${selectedCategory == 0}">すべて</option>
-            <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"
-                th:selected="${category.id == selectedCategory}">
-            </option>
-        </select>
-        <button type="submit">絞り込み</button>
-    </form>
+        <div class="admin-panel p-4">
+            <h2 class="text-center mb-4">商品一覧</h2>
 
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>カテゴリID</th>
-                <th>商品名</th>
-                <th>価格</th>
-                <th>画像URL</th>
-                <th>操作</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="product : ${products}">
-                <td th:text="${product.id}"></td>
-                <td th:text="${product.productCategoryId}"></td>
-                <td th:text="${product.name}"></td>
-                <td th:text="${product.price}"></td>
-                <td th:text="${product.imageUrl}"></td>
-                <td>
-                    <form th:action="@{/admin/product/delete}" method="post" style="display:inline;">
-                        <input type="hidden" name="id" th:value="${product.id}" />
-                        <input type="hidden" name="category" th:value="${selectedCategory}" />
-                        <button type="submit" onclick="return confirm('本当に削除しますか？');">削除</button>
-                    </form>
-                </td>
-            </tr>
-            <tr th:if="${#lists.isEmpty(products)}">
-                <td colspan="6">該当する商品がありません。</td>
-            </tr>
-        </tbody>
-    </table>
+            <!-- カテゴリ検索 -->
+            <form th:action="@{/admin/product}" method="get" class="d-flex justify-content-center gap-2 mb-4">
+                <select name="category" class="form-select w-auto">
+                    <option value="0">すべて</option>
+                    <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"
+                        th:selected="${selectedCategory != null and selectedCategory == cat.id}">
+                    </option>
+                </select>
+                <button type="submit" class="btn btn-fs-solid">カテゴリ検索</button>
+                <a th:href="@{/admin/product/add}" class="btn btn-fs">商品追加</a>
+            </form>
+
+            <!-- 商品一覧 -->
+            <table class="table table-bordered table-striped text-center align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>カテゴリ</th>
+                        <th>商品名</th>
+                        <th>単価</th>
+                        <th>画像</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="product : ${products}">
+                        <td th:text="${product.id}"></td>
+                        <td th:text="${product.productCategoryId}"></td>
+                        <td th:text="${product.name}"></td>
+                        <td th:text="${product.price}"></td>
+                        <td>
+                            <img class="table-thumb" th:src="${product.imageUrl}" alt="商品画像">
+                        </td>
+                        <td>
+                            <a th:href="@{/admin/product/edit/{id}(id=${product.id})}"
+                                class="btn btn-warning btn-sm me-2">修正</a>
+                            <a th:href="@{/admin/product/delete/{id}(id=${product.id})}"
+                                class="btn btn-danger btn-sm">削除</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ページネーション -->
+        <nav th:if="${totalPages > 1}">
+            <ul class="pagination justify-content-center">
+
+                <!-- 最初へ -->
+                <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/product(category=${selectedCategory}, page=1)}">最初へ</a>
+                </li>
+
+                <!-- ページ番号 -->
+                <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}"
+                    th:classappend="${i == currentPage} ? 'active'">
+                    <a class="page-link" th:href="@{/admin/product(category=${selectedCategory}, page=${i})}"
+                        th:text="${i}"></a>
+                </li>
+
+                <!-- 最後へ -->
+                <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                    <a class="page-link"
+                        th:href="@{/admin/product(category=${selectedCategory}, page=${totalPages})}">最後へ</a>
+                </li>
+
+            </ul>
+        </nav>
+
+    </div>
 </body>
 
 </html>

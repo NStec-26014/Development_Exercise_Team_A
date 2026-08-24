@@ -15,7 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.fullness.stationary.entity.Product;
 import com.example.fullness.stationary.form.ProductRegistForm;
 import com.example.fullness.stationary.mapper.ProductMapper;
-import com.example.fullness.stationary.service.ProductService;
+import com.example.fullness.stationary.service.Impl.ProductServiceImpl;
 
 @Controller
 @Transactional
@@ -24,7 +24,7 @@ import com.example.fullness.stationary.service.ProductService;
 public class ProductRegistCompleteController {
 
     @Autowired
-    private ProductService productService;
+    private ProductServiceImpl productService;
     @Autowired
     private ProductMapper productMapper;
 

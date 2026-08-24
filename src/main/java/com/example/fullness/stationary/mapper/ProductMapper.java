@@ -20,7 +20,7 @@ public interface ProductMapper {
 
     int edit(Product product);
 
-    void deleteById(Long id);
+    int deleteById(Long id);
 
     int updateStock(@Param("id") Long id, @Param("quantity") Integer quantity);
 }
