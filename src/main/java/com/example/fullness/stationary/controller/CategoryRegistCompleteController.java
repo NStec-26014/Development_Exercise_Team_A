@@ -22,16 +22,24 @@ public class CategoryRegistCompleteController {
     public String complete(
             @ModelAttribute("categoryInputForm") CategoryRegistForm form, Model model, SessionStatus sessionStatus) {
 
-        model.addAttribute("categoryInputForm", form);
-        sessionStatus.setComplete();
+        if (form == null || form.getCategoryName() == null || form.getCategoryName().isEmpty()) {
+
+            CategoryRegistForm dummyForm = new CategoryRegistForm();
+            dummyForm.setCategoryName("---");
+            model.addAttribute("categoryInputForm", dummyForm);
+        } else {
+
+            model.addAttribute("categoryInputForm", form);
+        } // リロード等でのデータ欠陥を防止
+
         return "admin/category/complete";
     }
 
     // メニュー画面へ戻る処理
     @GetMapping("/add/back-to-menu")
     public String backToMenu(SessionStatus sessionStatus) {
-        sessionStatus.setComplete();
-        return "redeirect:/admin";
+        sessionStatus.setComplete(); // セッションデータを完全にクリア
+        return "redirect:/admin";
     }
 
 }

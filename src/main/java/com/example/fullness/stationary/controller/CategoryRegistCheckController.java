@@ -28,15 +28,15 @@ public class CategoryRegistCheckController {
             @ModelAttribute("categoryInputForm") CategoryRegistForm form, Model model,
             RedirectAttributes redirectAttributes) {
 
-        // if (form == null || form.getCategoryName() == null ||
-        // form.getCategoryName().isEmpty()) {
-        // return "redirect:/admin/product/add";
-        // }
+        if (form == null || form.getCategoryName() == null || form.getCategoryName().isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "不正なアクセスです");
+            return "redirect:/admin/category/form";
+        }
         model.addAttribute("categoryInputForm", form);
-        return "admin/category/confirm";
+        return "admin/category/confirm"; // セッションデータ不足の場合は入力画面へ、正常な場合は確認画面へ遷移
     }
 
-    // 戻るボタン押下時
+    // 戻るボタン押下時(確認画面から入力画面へ戻る)
     @PostMapping(value = "/add/confirm", params = "action=back")
 
     public String back(@ModelAttribute("categoryInputForm") CategoryRegistForm form,
@@ -51,11 +51,19 @@ public class CategoryRegistCheckController {
     @PostMapping("/add/confirm")
     public String complete(
             @ModelAttribute("categoryInputForm") CategoryRegistForm form,
-            RedirectAttributes redirectAttributes) {
-        Category category = new Category(form.getCategoryName());
-        categoryService.saveCategory(category);
+            RedirectAttributes redirectAttributes, Model model) {
+        try {
+            Category category = new Category(form.getCategoryName());
+            categoryService.saveCategory(category);
 
-        redirectAttributes.addFlashAttribute("categoryInputForm", form);
-        return "redirect:/admin/category/add/complete";
+            redirectAttributes.addFlashAttribute("categoryInputForm", form);
+            return "redirect:/admin/category/add/complete";
+        } catch (Exception e) {
+
+            model.addAttribute("errorMessage", "登録に失敗しました");
+
+            return "admin/category/confirm"; // 登録成功時は完了画面へリダイレクトし、例外発生時は確認画面へ戻る
+        }
+
     }
 }

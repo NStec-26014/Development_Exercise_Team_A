@@ -15,20 +15,25 @@
         <div class="admin-panel p-4 mx-auto" style="max-width: 480px;">
             <h1 class="text-center mb-4">商品カテゴリ登録(入力)</h1>
 
-            <ul class="alert alert-danger" th:if="${errorMessages}">
+            <!-- <ul class="alert alert-danger" th:if="${errorMessages}">
                 <li th:each="msg : ${errorMessages}" th:text="${msg}"></li>
-            </ul>
+            </ul> -->
 
             <form th:action="@{/admin/category/add}" th:object="${categoryInputForm}" method="post">
+
+                <ul class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
+                    <li th:each="err : ${#fields.detailedErrors()}" th:text="${err.message}"></li>
+                </ul>
+
                 <div class="mb-3 row">
                     <label class="col-sm-4 col-form-label">カテゴリ名</label>
                     <div class="col-sm-8">
-                        <input type="text" name="name" class="form-control" th:value="${categoryInputForm.categoryName}"
-                            maxlength="30">
+                        <input type="text" th:field="*{categoryName}" class="form-control" maxlength="30">
                     </div>
                 </div>
                 <div class="text-center mt-4">
-                    <a th:href="@{/admin}" class="btn btn-link link-fs">キャンセル</a>
+                    <button type="button" class="btn btn-link link-fs"
+                        th:onclick="|location.href='@{/admin/category/category}'|">キャンセル</button>
                     <button type="submit" class="btn btn-fs-solid px-4">完了</button>
                 </div>
             </form>
