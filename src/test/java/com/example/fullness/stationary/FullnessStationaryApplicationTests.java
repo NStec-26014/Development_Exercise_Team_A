@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 class FullnessStationaryApplicationTests {
 
 	@Test
-	void a() {
+	void contextLoads() {
 	}
 
 }
