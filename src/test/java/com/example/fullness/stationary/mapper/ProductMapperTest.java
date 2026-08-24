@@ -1,43 +1,65 @@
 package com.example.fullness.stationary.mapper;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-
 import org.junit.jupiter.api.Test;
-import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.fullness.stationary.entity.Product;
 
-@MybatisTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@SpringBootTest
+@Transactional
 public class ProductMapperTest {
 
     @Autowired
     private ProductMapper productMapper;
 
     @Test
-    void testInsert_OK1() {
+    public void Case1_findAllWithPaging_OK() {
 
-        Product product = new Product();
-        product.setProductCategoryId(1L);
-        product.setName("テストボールペン");
-        product.setPrice(500);
-        product.setImageUrl(null);
-        product.setDeleteFlag(0);
+        List<Product> result = productMapper.findAllWithPaging(0, 10);
 
-        productMapper.insert(product);
+        assertEquals(10, result.size());
+    }
 
-        Product actual = productMapper.findById(product.getId());
+    @Test
+    public void Case2_findByCategoryIdWithPaging_OK() {
 
-        assertNotNull(actual);
-        assertEquals(product.getId(), actual.getId());
-        assertEquals(1, actual.getProductCategoryId());
-        assertEquals("テストボールペン", actual.getName());
-        assertEquals(500, actual.getPrice());
-        assertNull(actual.getImageUrl());
-        assertEquals(0, actual.getDeleteFlag());
+        List<Product> result = productMapper.findByCategoryIdWithPaging(1L, 0, 10);
+
+        assertEquals(10, result.size());
+        for (Product product : result) {
+            assertEquals(1, product.getProductCategoryId());
+        }
+    }
+
+    @Test
+    public void Case3_countAll_OK() {
+
+        int result = productMapper.countAll();
+
+        assertEquals(32, result);
+    }
+
+    @Test
+    public void Case4_countByCategoryId_OK() {
+
+        int result = productMapper.countByCategoryId(1L);
+
+        assertEquals(30, result);
+    }
+
+    @Test
+    public void Case5_findById_OK() {
+
+        Product result = productMapper.findById(1001L);
+
+        assertNotNull(result);
+        assertEquals(1001, result.getId());
+        assertEquals("水性ボールペン(黒)", result.getName());
     }
 }

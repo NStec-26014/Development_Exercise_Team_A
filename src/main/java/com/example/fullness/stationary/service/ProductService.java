@@ -39,38 +39,10 @@ public interface ProductService {
      */
     Product findById(Long id);
 
-    // 商品検索（カテゴリIDで絞り込み）
-    public List<Product> searchProducts(Long categoryId) {
-        if (categoryId == null || categoryId == 0) {
-            return productMapper.findAll();
-        }
-        return productMapper.findByCategoryId(categoryId);
-    }
+     // 商品登録
+    void saveProduct(Product product);
+    
 
-    // 商品登録
-    public void saveProduct(Product product) {
-        productMapper.insert(product);
-    }
 
-    // カテゴリ登録
-    public void saveCategory(Category category) {
-        categoryMapper.insert(category);
-    }
 
-    // 商品削除
-    public void deleteProduct(Long id) {
-        productMapper.deleteById(id);
-    }
-
-    // 商品修正
-    public void editProduct(Product product) {
-        productMapper.edit(product);
-
-        productMapper.updateStock(product.getId(), product.getQuantity());
-    }
-
-    // 商品詳細取得
-    public Product findById(Long id) {
-        return productMapper.findById(id);
-    }
 }
