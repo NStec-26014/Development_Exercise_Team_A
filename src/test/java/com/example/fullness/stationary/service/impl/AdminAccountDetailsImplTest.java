@@ -25,10 +25,14 @@ class AdminAccountDetailsImplTest {
 
     @Test
     void loadUserByUsername_shouldCallMapperAndReturnUserDetails() {
+        Integer id = 100;
+        Integer employeeId = 1002;
         String username = "fullness2";
         String password = "f144784fe5a8f72f3bdfb9ca32f3b8e70816e4da40faa13e942460105fc35603cea2abce47573e580fe7c98d51e2a203c0b7071b967a196d701f694742456305";
 
         EmployeeAccount account = new EmployeeAccount();
+        account.setId(id);
+        account.setEmployeeId(employeeId);
         account.setName(username);
         account.setPassword(password);
 
@@ -36,11 +40,12 @@ class AdminAccountDetailsImplTest {
 
         UserDetails result = adminAccountDetailsImpl.loadUserByUsername(username);
 
+        assertEquals(id, account.getId());
+        assertEquals(employeeId, account.getEmployeeId());
         assertEquals(username, result.getUsername());
         assertEquals(password, result.getPassword());
+
         verify(employeeAccountMapper, times(1)).selectByName(username);
     }
 
-    
 }
-
