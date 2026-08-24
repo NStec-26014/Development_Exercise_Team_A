@@ -40,4 +40,11 @@ public class ProductMapperTest {
         assertNull(actual.getImageUrl());
         assertEquals(0, actual.getDeleteFlag());
     }
+
+    @Test
+    void deleteByIdTest_OK() {
+        long productId = 1001;
+        int actual = productMapper.deleteById(productId);
+        assertEquals(1, actual);
+    }
 }

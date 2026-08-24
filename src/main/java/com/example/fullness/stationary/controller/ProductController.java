@@ -3,7 +3,6 @@ package com.example.fullness.stationary.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -67,18 +66,6 @@ public class ProductController {
         return "admin/search"; // → templates/admin/search.html
     }
 
-    // @PostMapping("/delete")
-    // public String deleteProduct(
-    // @RequestParam Long id, // 削除対象の商品ID
-    // @RequestParam(required = false, defaultValue = "0") Long category) {
-
-    // // 消すとき
-    // productService.deleteProduct(id);
-
-    // // リダイレクト（削除後、同じカテゴリの一覧に戻る）
-    // return "redirect:/admin/product?category=" + category;
-    // }
-
     // 確認画面を表示するメソッド
     @GetMapping("/delete/{id}")
     public String ShowProductDeleteConfirm(@PathVariable("id") Long id, HttpSession session, Model model) {
@@ -96,19 +83,23 @@ public class ProductController {
 
     // 削除を実行するメソッド
     @PostMapping("/delete/doDelete")
-    public String doDeleteProduct(HttpSession session) {
+    public String doDeleteProduct(HttpSession session, Model model) {
         // 削除が完了（true）が返ってきたときに完了画面に遷移する
-        boolean success = productServiceImpl.deleteProduct((Long) session.getAttribute("deleteId"));// nullにセッションから取得した削除したいid
+        boolean success = productServiceImpl.deleteProduct((Long) session.getAttribute("deleteId"));
         if (success) {
             return ("redirect:/admin/product/delete/complete");
         }
-        return "/error";// エラー画面遷移を後で書く
+        // エラーメッセージを保持させる
+        return "redirect:/admin/product/delete/confirm";
+
     }
 
     // 完了画面を表示するメソッド
     @GetMapping("/delete/complete")
-    public String ShowProductDeleteComplete(HttpSession session) {
-        // 商品名がnullになる
+    public String ShowProductDeleteComplete(HttpSession session, Model model) {
+        // 商品名に入る情報を取得
+        model.addAttribute("deleteName", session.getAttribute("deleteName"));
+
         // 完了画面に遷移する
         return ("admin/product/delete_complete");
     }

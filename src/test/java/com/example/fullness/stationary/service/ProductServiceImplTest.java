@@ -1,6 +1,8 @@
 package com.example.fullness.stationary.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,10 +18,10 @@ import com.example.fullness.stationary.mapper.ProductMapper;
 import com.example.fullness.stationary.service.Impl.ProductServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
-public class ProductServiceTest {
+public class ProductServiceImplTest {
 
     @InjectMocks
-    private ProductServiceImpl productService;
+    private ProductServiceImpl productServiceImpl;
     @Mock
     private ProductMapper productMapper;
 
@@ -28,9 +30,18 @@ public class ProductServiceTest {
 
         Product product = new Product();
 
-        productService.saveProduct(product);
+        productServiceImpl.saveProduct(product);
 
         verify(productMapper).insert(product);
+    }
+
+    @Test
+    void deleteProductTest_OK() {
+        long productId = 1001;
+        when(productMapper.deleteById(productId)).thenReturn(1);
+        boolean actual = productServiceImpl.deleteProduct(productId);
+        assertEquals(true, actual);
+        verify(productMapper).deleteById(productId);
     }
 
 }
