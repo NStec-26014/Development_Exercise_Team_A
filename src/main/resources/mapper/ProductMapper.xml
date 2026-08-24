@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.fullness.stationary.mapper.ProductMapper">
+
+    <resultMap id="ProductResult" type="com.example.fullness.stationary.entity.Product">
+        <id property="id" column="id" />
+        <result property="productCategoryId" column="product_category_id" />
+        <result property="name" column="name" />
+        <result property="price" column="price" />
+        <result property="imageUrl" column="image_url" />
+        <result property="deleteFlag" column="delete_flag" />
+    </resultMap>
+
+    <select id="findAll" resultMap="ProductResult">
+         <![CDATA[ 
+        SELECT id, product_category_id, name, price, image_url, delete_flag
+        FROM product
+        WHERE delete_flag = 0
+        ORDER BY id
+        ]]>
+    </select>
+
+    <select id="findByCategoryId" parameterType="long" resultMap="ProductResult">
+        <![CDATA[ 
+        SELECT id, product_category_id, name, price, image_url, delete_flag
+        FROM product
+        WHERE product_category_id = #{categoryId}
+          AND delete_flag = 0
+        ORDER BY id
+         ]]>
+    </select>
+
+    <select id="findById" parameterType="long" resultMap="ProductResult">
+        <![CDATA[ 
+        SELECT id, product_category_id, name, price, image_url, delete_flag
+        FROM product
+        WHERE id = #{id}
+         ]]>
+    </select>
+
+    <insert id="insert" parameterType="com.example.fullness.stationary.entity.Product" useGeneratedKeys="true" keyProperty="id">
+        <![CDATA[ 
+        INSERT INTO product (product_category_id, name, price, image_url, delete_flag)
+        VALUES (#{productCategoryId}, #{name}, #{price}, #{imageUrl}, #{deleteFlag})
+        ]]>
+    </insert>
+
+    <update id="deleteById" parameterType="long">
+        <![CDATA[ 
+        UPDATE product
+        SET delete_flag = 1
+        WHERE id = #{id}
+        ]]>
+    </update>
+
+</mapper>
