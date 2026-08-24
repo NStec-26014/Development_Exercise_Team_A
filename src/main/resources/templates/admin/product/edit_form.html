@@ -15,6 +15,14 @@
 
         <ul class="alert alert-danger" th:if="${errorMessages}">
             <li th:each="msg : ${errorMessages}" th:text="${msg}"></li>
+
+
+    <!-- <div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}" style="background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 20px; border-radius: 4px; margin-bottom: 20px;">
+        <h1 class="text-center mb-4">商品修正(入力)</h1>
+        <ul style="margin-bottom: 0; padding-left: 20px;">
+            <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li> -->
+
+
         </ul>
 
         <form th:action="@{/admin/product/edit}" th:object="${form}" method="post" enctype="multipart/form-data">
@@ -27,6 +35,7 @@
                 <div class="col-sm-8">
                     <!-- 💡 th:field="*{name}" に書き換えました -->
                     <input type="text" th:field="*{name}" class="form-control" maxlength="20">
+                    <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger small mt-1"></div>
                 </div>
             </div>
             <div class="mb-3 row">
@@ -34,6 +43,7 @@
                 <div class="col-sm-8">
                     <!-- 💡 th:field="*{price}" に書き換えました -->
                     <input type="text" th:field="*{price}" class="form-control">
+                    <div th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="text-danger small mt-1"></div>
                 </div>
             </div>
             <div class="mb-3 row">
@@ -41,7 +51,7 @@
                 <div class="col-sm-8">
                     <!-- 💡 th:field="*{quantity}" に書き換えました -->
                     <input type="text" th:field="*{quantity}" class="form-control">
-                </div>
+                    <div th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}" class="text-danger small mt-1"></div>
             </div>
             <div class="mb-3 row">
                 <label class="col-sm-4 col-form-label">商品カテゴリ</label>
@@ -52,6 +62,7 @@
                                 th:value="${cat.id}"
                                 th:text="${cat.name}"></option>
                     </select>
+                    <div th:if="${#fields.hasErrors('productCategoryId')}" th:errors="*{productCategoryId}" class="text-danger small mt-1"></div>
                 </div>
             </div>
             <div class="mb-3 row">
