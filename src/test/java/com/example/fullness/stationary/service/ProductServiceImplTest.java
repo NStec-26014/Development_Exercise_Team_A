@@ -16,15 +16,8 @@ import com.example.fullness.stationary.mapper.CategoryMapper;
 import com.example.fullness.stationary.mapper.ProductMapper;
 import com.example.fullness.stationary.service.Impl.ProductServiceImpl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.stereotype.Service;
-
-import com.example.fullness.stationary.entity.Product;
-import com.example.fullness.stationary.mapper.ProductMapper;
-
 @ExtendWith(MockitoExtension.class)
-class ProductServiceTest {
+class ProductServiceImplTest {
 
     @Mock
     private CategoryMapper categoryMapper;
@@ -34,9 +27,6 @@ class ProductServiceTest {
 
     @InjectMocks
     private ProductServiceImpl productServiceImpl;
-
-    @InjectMocks
-    private ProductService productService;
 
     private Product product;
 
@@ -54,7 +44,7 @@ class ProductServiceTest {
 
     @Test
     void editProduct_shouldDelegateToProductMapper() {
-        productService.editProduct(product);
+        productServiceImpl.editProduct(product);
 
         verify(productMapper).edit(product);
 
@@ -70,7 +60,7 @@ class ProductServiceTest {
 
         Product product = new Product();
 
-        productService.saveProduct(product);
+        productServiceImpl.saveProduct(product);
 
         verify(productMapper).insert(product);
     }
