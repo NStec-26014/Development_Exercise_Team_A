@@ -1,0 +1,20 @@
+package com.example.fullness.stationary.entity;
+
+import java.io.Serializable;
+
+import lombok.Data;
+
+@Data
+public class Employee implements Serializable {
+
+    private Integer id;
+    private Integer departmentId;
+    private String name;
+    private String nameKana;
+
+    // public Employee(long id, String name) {
+    // this.id = id;
+    // this.name = name;
+    // }
+
+}
