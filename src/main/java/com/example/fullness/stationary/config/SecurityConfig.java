@@ -44,17 +44,42 @@ public class SecurityConfig {
         
         return http.build();
     }
-
-    @Bean
+           @Bean
     public AuthenticationFailureHandler customAuthenticationFailureHandler() {
         return (request, response, exception) -> {
+            String accountName = request.getParameter("accountName");
+            String password = request.getParameter("password");
+
+            boolean isAccountEmpty = (accountName == null || accountName.trim().isEmpty());
+            boolean isPasswordEmpty = (password == null || password.isEmpty());
+
             if (exception instanceof InternalAuthenticationServiceException) {
                 response.sendRedirect(request.getContextPath() + "/admin/error");
-            } else {
-                response.sendRedirect(request.getContextPath() + "/admin/login?error");
+                return;
             }
+
+            String errorMessage = "";
+
+            if (isAccountEmpty || isPasswordEmpty) {
+                StringBuilder msg = new StringBuilder();
+                if (isAccountEmpty) {
+                    msg.append("アカウント名が未入力です。");
+                }
+                if (isPasswordEmpty) {
+                    if (msg.length() > 0) msg.append(" ");
+                    msg.append("パスワードが未入力です。");
+                }
+                errorMessage = msg.toString();
+            } else {
+                errorMessage = "アカウント名またはパスワードが正しくありません。";
+            }
+
+            request.getSession().setAttribute("LOGIN_ERROR_MESSAGE", errorMessage);
+
+            response.sendRedirect(request.getContextPath() + "/admin/login?error");
         };
     }
+    
 
     @Bean
     @SuppressWarnings("deprecation")

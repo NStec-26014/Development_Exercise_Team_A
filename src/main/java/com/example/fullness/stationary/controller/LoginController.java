@@ -4,6 +4,9 @@ import com.example.fullness.stationary.entity.Employee;
 import com.example.fullness.stationary.entity.EmployeeAccount;
 import com.example.fullness.stationary.mapper.EmployeeAccountMapper;
 import com.example.fullness.stationary.mapper.EmployeeMapper;
+
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -41,14 +44,25 @@ public class LoginController {
         model.addAttribute("loginEmployeeName", Name);
         return "admin/menu";
     }
-    @GetMapping("/admin/login")
-    public String login(@RequestParam(value = "error", required = false) String error, Model model) {
+       @GetMapping("/admin/login")
+    public String login(@RequestParam(value = "error", required = false) String error, 
+                        HttpSession session, 
+                        Model model) {
+                        
         if (error != null) {
-            model.addAttribute("errorMessage", "アカウント名またはパスワードが正しくありません。");  
+            String errorMessage = (String) session.getAttribute("LOGIN_ERROR_MESSAGE");
+            
+            if (errorMessage != null) {
+                model.addAttribute("errorMessage", errorMessage);
+                session.removeAttribute("LOGIN_ERROR_MESSAGE");
+            } else {
+                model.addAttribute("errorMessage", "ログインに失敗しました。");
+            }
         }
         return "admin/login";
     }
 
+ 
     @GetMapping("/admin/error")
     public String showError(Model model){
         model.addAttribute("errorMessage", "システムエラーが発生しました。管理者に連絡してください");
