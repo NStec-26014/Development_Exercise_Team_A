@@ -2,18 +2,17 @@ package com.example.fullness.stationary.mapper;
 
 import com.example.fullness.stationary.entity.Employee;
 import org.junit.jupiter.api.Test;
-import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.jdbc.Sql;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@MybatisTest
-@Sql({
-        "/sql/employee_schema.sql",
-        "/sql/employee_data.sql"
-})
-class EmployeeMapperTest {
+@SpringBootTest
+@Transactional
+public class EmployeeMapperTest {
 
     @Autowired
     private EmployeeMapper employeeMapper;
@@ -22,10 +21,12 @@ class EmployeeMapperTest {
     void selectByIdReturnEmployee() {
         Employee employee = employeeMapper.selectById(1002);
 
-        assertThat(employee).isNotNull();
-        assertThat(employee.getId()).isEqualTo(1002);
-        assertThat(employee.getDepartmentId()).isEqualTo(2);
-        assertThat(employee.getName()).isEqualTo("山田太郎");
-        assertThat(employee.getName_kana()).isEqualTo("ヤマダタロウ");
+        assertNotNull(employee);
+        assertAll(
+            () -> assertEquals(1002, employee.getId()),
+            () -> assertEquals(2, employee.getDepartmentId()),
+            () -> assertEquals("山田太郎", employee.getName()),
+            () -> assertEquals("ヤマダタロウ", employee.getName_kana())
+        );
     }
 }
