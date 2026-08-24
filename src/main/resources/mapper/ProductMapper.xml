@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "classpath:org/apache/ibatis/builder/xml/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.fullness.stationary.mapper.ProductMapper">
 
     <resultMap id="ProductResult" type="com.example.fullness.stationary.entity.Product">
@@ -9,38 +9,74 @@
         <result property="price" column="price" />
         <result property="imageUrl" column="image_url" />
         <result property="deleteFlag" column="delete_flag" />
+        <!-- Javaの quantity 変数に、合体したテーブルの quantity の値を入れます -->
+        <result property="quantity" column="quantity" />
     </resultMap>
 
+    <!-- 💡すべての SELECT 文で、FROM product の後ろに LEFT JOIN product_stock を追加しました -->
     <select id="findAll" resultMap="ProductResult">
-        SELECT id, product_category_id, name, price, image_url, delete_flag
-        FROM product
-        WHERE delete_flag = 0
-        ORDER BY id
+         <![CDATA[ 
+        SELECT p.id, p.product_category_id, p.name, p.price, p.image_url, p.delete_flag, s.quantity
+        FROM product p
+        LEFT JOIN product_stock s ON p.id = s.product_id
+        WHERE p.delete_flag = 0
+        ORDER BY p.id
+        ]]>
     </select>
 
     <select id="findByCategoryId" parameterType="long" resultMap="ProductResult">
-        SELECT id, product_category_id, name, price, image_url, delete_flag
-        FROM product
-        WHERE product_category_id = #{categoryId}
-          AND delete_flag = 0
-        ORDER BY id
+        <![CDATA[ 
+        SELECT p.id, p.product_category_id, p.name, p.price, p.image_url, p.delete_flag, s.quantity
+        FROM product p
+        LEFT JOIN product_stock s ON p.id = s.product_id
+        WHERE p.product_category_id = #{categoryId}
+          AND p.delete_flag = 0
+        ORDER BY p.id
+         ]]>
     </select>
 
     <select id="findById" parameterType="long" resultMap="ProductResult">
-        SELECT id, product_category_id, name, price, image_url, delete_flag
-        FROM product
-        WHERE id = #{id}
+        <![CDATA[ 
+        SELECT p.id, p.product_category_id, p.name, p.price, p.image_url, p.delete_flag, s.quantity
+        FROM product p
+        LEFT JOIN product_stock s ON p.id = s.product_id
+        WHERE p.id = #{id}
+         ]]>
     </select>
 
-    <insert id="insert" parameterType="com.example.fullness.stationary.entity.Product" useGeneratedKeys="true" keyProperty="id">
+    <!-- 💡登録(insert)と更新(edit)は、元の product テーブルの操作に戻します（quantityは除外） -->
+    <insert id="insert" parameterType="com.example.fullness.stationary.entity.Product">
+        <![CDATA[ 
         INSERT INTO product (product_category_id, name, price, image_url, delete_flag)
         VALUES (#{productCategoryId}, #{name}, #{price}, #{imageUrl}, #{deleteFlag})
+        ]]>
     </insert>
 
+    <update id="edit" parameterType="com.example.fullness.stationary.entity.Product">
+        <![CDATA[ 
+        UPDATE product
+        SET product_category_id = #{productCategoryId},
+            name = #{name},
+            price = #{price},
+            image_url = #{imageUrl}
+        WHERE id = #{id}
+        ]]>
+    </update>
+
+    <update id="updateStock">
+        <![CDATA[ 
+        UPDATE product_stock
+        SET quantity = #{quantity}
+        WHERE product_id = #{id}
+        ]]>
+    </update>
+
     <update id="deleteById" parameterType="long">
+        <![CDATA[ 
         UPDATE product
         SET delete_flag = 1
         WHERE id = #{id}
+        ]]>
     </update>
 
 </mapper>
