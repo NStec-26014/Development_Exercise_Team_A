@@ -3,7 +3,6 @@ package com.example.fullness.stationary.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 import com.example.fullness.stationary.entity.Product;
 
@@ -18,9 +17,5 @@ public interface ProductMapper {
 
     int insert(Product product);
 
-    int edit(Product product);
-
-    void deleteById(Long id);
-
-    int updateStock(@Param("id") Long id, @Param("quantity") Integer quantity);
+    int deleteById(Long id);
 }
