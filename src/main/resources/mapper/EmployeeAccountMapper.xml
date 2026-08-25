@@ -20,8 +20,10 @@
 
 
    <select id="existsByAccountName" resultType="boolean">
+    <![CDATA[
             SELECT EXISTS
             (SELECT * FROM employee_account WHERE name = #{accountName})
+             ]]>
     </select>
 
     <select id="findAllByNameIsNull" resultMap="EmployeeInfomationResult">
@@ -59,6 +61,7 @@
     
     <!-- アカウント名でアカウント情報を取得 -->
     <select id="selectByName" resultMap="EmployeeAccountResultMap">
+    <![CDATA[
         SELECT
             id,
             employee_id,
@@ -66,6 +69,7 @@
             password
         FROM employee_account
         WHERE name = #{name}
+         ]]>
     </select>
     
 </mapper>

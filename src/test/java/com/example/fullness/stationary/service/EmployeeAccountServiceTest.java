@@ -8,16 +8,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.example.fullness.stationary.entity.Employee;
 import com.example.fullness.stationary.entity.EmployeeAccount;
 import com.example.fullness.stationary.mapper.EmployeeAccountMapper;
 import com.example.fullness.stationary.service.impl.EmployeeAccountServiceImpl;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class EmployeeAccountServiceTest {
 
     @Mock

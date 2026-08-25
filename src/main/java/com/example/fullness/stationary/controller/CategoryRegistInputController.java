@@ -14,8 +14,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.fullness.stationary.form.CategoryRegistForm;
-//SSimport com.example.fullness.stationary.form.ValueForm;
-import com.example.fullness.stationary.service.CategoryService;
+import com.example.fullness.stationary.service.ProductCategoryService;
 
 @Controller
 @RequestMapping("/admin/category")
@@ -23,7 +22,7 @@ import com.example.fullness.stationary.service.CategoryService;
 public class CategoryRegistInputController {
 
     @Autowired
-    private CategoryService categoryService;
+    private ProductCategoryService categoryService;
 
     @ModelAttribute("categoryInputForm")
     public CategoryRegistForm categoryRegistForm() {

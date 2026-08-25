@@ -38,4 +38,6 @@ public interface ProductCategoryMapper {
      * @return 登録件数
      */
     int insert(ProductCategory category);
+
+    ProductCategory findByCategoryName(String categoryName);
 }

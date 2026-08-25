@@ -30,6 +30,14 @@
         ]]>
     </insert>
 
+        <select id="findByCategoryName" resultMap="ProductCategoryResult">
+          <![CDATA[
+        SELECT id, name
+        FROM product_category
+        WHERE name = #{categoryName}
+        ]]>
+    </select>
+
     
 
 </mapper>

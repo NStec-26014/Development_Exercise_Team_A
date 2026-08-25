@@ -3,7 +3,6 @@ package com.example.fullness.stationary.service;
 import java.util.List;
 
 import com.example.fullness.stationary.entity.ProductCategory;
-import com.example.fullness.stationary.entity.ProductCategory;
 
 /**
  * カテゴリに関する業務処理のインターフェース。
@@ -24,4 +23,6 @@ public interface ProductCategoryService {
     ProductCategory findById(Long id);
 
     void saveProductCategory(ProductCategory category);
+
+    boolean isDuplicate(String categoryName);
 }

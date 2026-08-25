@@ -58,4 +58,10 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     public void saveProductCategory(ProductCategory category) {
         categoryMapper.insert(category);
     }
+
+    @Override
+    public boolean isDuplicate(String categoryName) {
+        ProductCategory existingCategory = categoryMapper.findByCategoryName(categoryName);
+        return existingCategory != null;
+    }
 }
