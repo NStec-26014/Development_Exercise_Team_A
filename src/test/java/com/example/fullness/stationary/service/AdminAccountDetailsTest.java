@@ -1,7 +1,9 @@
-package com.example.fullness.stationary.service.impl;
+package com.example.fullness.stationary.service;
 
 import com.example.fullness.stationary.entity.EmployeeAccount;
 import com.example.fullness.stationary.mapper.EmployeeAccountMapper;
+import com.example.fullness.stationary.service.impl.AdminAccountDetailsImpl;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,13 +17,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class AdminAccountDetailsImplTest {
+class AdminAccountDetailsTest {
 
     @Mock
     private EmployeeAccountMapper employeeAccountMapper;
 
     @InjectMocks
-    private AdminAccountDetailsImpl adminAccountDetailsImpl;
+    private AdminAccountDetailsImpl adminAccountDetails;
 
     @Test
     void CallEmployeeAccountMapper() {
@@ -33,7 +35,7 @@ class AdminAccountDetailsImplTest {
         account.setPassword("hashed-password");
 
         when(employeeAccountMapper.selectByName(username)).thenReturn(account);
-        adminAccountDetailsImpl.loadUserByUsername(username);
+        adminAccountDetails.loadUserByUsername(username);
         verify(employeeAccountMapper, times(1)).selectByName(username);
     }
 
@@ -52,7 +54,7 @@ class AdminAccountDetailsImplTest {
 
         when(employeeAccountMapper.selectByName(username)).thenReturn(account);
 
-        UserDetails result = adminAccountDetailsImpl.loadUserByUsername(username);
+        UserDetails result = adminAccountDetails.loadUserByUsername(username);
 
         assertEquals(id, account.getId());
         assertEquals(employeeId, account.getEmployeeId());
