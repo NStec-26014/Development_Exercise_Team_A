@@ -17,8 +17,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.fullness.stationary.form.ProductRegistForm;
 import com.example.fullness.stationary.service.ProductCategoryService;
-import com.example.fullness.stationary.service.ProductCategoryServiceImpl;
 import com.example.fullness.stationary.service.ProductService;
+import com.example.fullness.stationary.service.impl.ProductCategoryServiceImpl;
 import com.example.fullness.stationary.validator.ProductRegistValidator;
 
 @Controller
