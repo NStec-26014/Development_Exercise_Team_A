@@ -1,4 +1,4 @@
-package com.example.fullness.stationary.service.impl;
+package com.example.fullness.stationary.service.Impl;
 
 import java.util.List;
 
@@ -24,6 +24,7 @@ public class EmployeeAccountServiceImpl implements EmployeeAccountService {
         // バリデーションをチェックして論理型を返す
         // 重複しているときはfalseを返す
         boolean existBooleanCheck = employeeAccountMapper.existsByAccountName(accountName);
+        System.out.println(existBooleanCheck);
         boolean returnBoolean = false;
         if (existBooleanCheck == false) {
             return true;

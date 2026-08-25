@@ -15,7 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.example.fullness.stationary.entity.Employee;
 import com.example.fullness.stationary.entity.EmployeeAccount;
 import com.example.fullness.stationary.mapper.EmployeeAccountMapper;
-import com.example.fullness.stationary.service.impl.EmployeeAccountServiceImpl;
+import com.example.fullness.stationary.service.Impl.EmployeeAccountServiceImpl;
 
 @SpringBootTest
 public class EmployeeAccountServiceTest {

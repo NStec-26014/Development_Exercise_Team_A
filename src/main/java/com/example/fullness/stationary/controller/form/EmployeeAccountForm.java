@@ -13,9 +13,10 @@ import lombok.Data;
 @Data
 public class EmployeeAccountForm implements Serializable {
 
-    @NotNull(message = "社員名を選択してください")
+    @NotNull
     private Integer employeeId;
 
+    @NotNull(message = "社員名を選択してください")
     private String employeeName;
 
     @NotNull(message = "アカウント名を入力してください")
@@ -27,5 +28,12 @@ public class EmployeeAccountForm implements Serializable {
     @Size(min = 5, max = 20, message = "パスワードは5～20文字で入力してください")
     @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "パスワードは半角英数字で入力してください")
     private String password;
+
+    // public EmployeeAccountForm(String employeeName, String accountName, String
+    // password) {
+    // this.employeeName = employeeName;
+    // this.accountName = accountName;
+    // this.password = password;
+    // }
 
 }

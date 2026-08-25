@@ -15,16 +15,20 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.fullness.stationary.form.ProductRegistForm;
+import com.example.fullness.stationary.service.Impl.ProductServiceImpl;
+import com.example.fullness.stationary.service.Impl.ProductCategoryServiceImpl;
+import com.example.fullness.stationary.controller.form.ProductRegistForm;
 import com.example.fullness.stationary.service.ProductCategoryService;
 import com.example.fullness.stationary.service.ProductService;
-import com.example.fullness.stationary.service.impl.ProductCategoryServiceImpl;
 import com.example.fullness.stationary.validator.ProductRegistValidator;
 
 @Controller
 @RequestMapping("/admin/product")
 @SessionAttributes("productInputForm") // productInputFormというモデルを属性をセッションに保存する
 public class ProductRegistInputController {
+
+    @Autowired
+    private ProductServiceImpl productService;
     @Autowired
     private ProductRegistValidator productResistValidator; // 依存注入
     @Autowired

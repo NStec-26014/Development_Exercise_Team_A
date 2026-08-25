@@ -3,6 +3,7 @@ package com.example.fullness.stationary.service;
 import java.util.List;
 
 import com.example.fullness.stationary.entity.ProductCategory;
+import com.example.fullness.stationary.entity.ProductCategory;
 
 /**
  * カテゴリに関する業務処理のインターフェース。
@@ -20,10 +21,7 @@ public interface ProductCategoryService {
      */
     List<ProductCategory> getAllCategories();
 
-    // /**
-    // * カテゴリを登録する。
-    // *
-    // * @param category 登録対象のカテゴリ情報
-    // */
-    // void saveCategory(ProductCategory category);
+    ProductCategory findById(Long id);
+
+    void saveProductCategory(ProductCategory category);
 }

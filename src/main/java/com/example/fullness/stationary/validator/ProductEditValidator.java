@@ -5,7 +5,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import com.example.fullness.stationary.form.ProductEditForm;
+import com.example.fullness.stationary.controller.form.ProductEditForm;
 
 import jakarta.annotation.Nonnull;
 

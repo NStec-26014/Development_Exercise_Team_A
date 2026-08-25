@@ -17,6 +17,8 @@ public class ProductCategory implements Serializable {
     private Long id; // 主キー（product_categoryテーブルのid）
     private String name; // カテゴリ名（例: "ペン", "ノート"）
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * デフォルトコンストラクタ。
      * MyBatis のマッピング処理で利用される。
@@ -43,4 +45,5 @@ public class ProductCategory implements Serializable {
         this.id = id;
         this.name = name;
     }
+
 }
