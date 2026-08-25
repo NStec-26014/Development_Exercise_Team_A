@@ -24,7 +24,7 @@
         ]]>
     </select>
 
-    <select id="findByCategoryId" parameterType="long" resultMap="ProductResult">
+    <select id="findByProductCategoryId" parameterType="long" resultMap="ProductResult">
         <![CDATA[ 
         SELECT p.id, p.product_category_id, p.name, p.price, p.image_url, p.delete_flag, s.quantity
         FROM product p

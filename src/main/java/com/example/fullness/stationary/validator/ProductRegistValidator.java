@@ -5,7 +5,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import com.example.fullness.stationary.form.ProductRegistForm;
+import com.example.fullness.stationary.controller.form.ProductRegistForm;
 
 @Component
 public class ProductRegistValidator implements Validator {
@@ -21,7 +21,7 @@ public class ProductRegistValidator implements Validator {
 
         validateName(form, errors);
         validatePrice(form, errors);
-        validateCategory(form, errors);
+        validateProductCategory(form, errors);
         validateQuantity(form, errors);
         // validateImageUrl(form, errors);
     }
@@ -68,7 +68,7 @@ public class ProductRegistValidator implements Validator {
         }
     }
 
-    private void validateCategory(ProductRegistForm form, Errors errors) {
+    private void validateProductCategory(ProductRegistForm form, Errors errors) {
         Integer productCategoryId = form.getProductCategoryId();
         if (productCategoryId == null) {
             errors.rejectValue("productCategoryId", "", "カテゴリを選択してください");

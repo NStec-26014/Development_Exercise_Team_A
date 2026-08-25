@@ -1,4 +1,4 @@
-package com.example.fullness.stationary.form;
+package com.example.fullness.stationary.controller.form;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,50 +17,50 @@ public class ProductEditForm {
     private String imageUrl; // 画像URL
 
     // public Long getId() {
-    //     return id;
+    // return id;
     // }
 
     // public void setId(Long id) {
-    //     this.id = id;
+    // this.id = id;
     // }
 
     // public String getName() {
-    //     return name;
+    // return name;
     // }
 
     // public void setName(String name) {
-    //     this.name = name;
+    // this.name = name;
     // }
 
     // public Integer getPrice() {
-    //     return price;
+    // return price;
     // }
 
     // public void setPrice(Integer price) {
-    //     this.price = price;
+    // this.price = price;
     // }
 
     // public Integer getQuantity() {
-    //     return quantity;
+    // return quantity;
     // }
 
     // public void setQuantity(Integer quantity) {
-    //     this.quantity = quantity;
+    // this.quantity = quantity;
     // }
 
     // public Long getProductCategoryId() {
-    //     return productCategoryId;
+    // return productCategoryId;
     // }
 
     // public void setProductCategoryId(Long productCategoryId) {
-    //     this.productCategoryId = productCategoryId;
+    // this.productCategoryId = productCategoryId;
     // }
 
     // public String getImageUrl() {
-    //     return imageUrl;
+    // return imageUrl;
     // }
 
     // public void setImageUrl(String imageUrl) {
-    //     this.imageUrl = imageUrl;
+    // this.imageUrl = imageUrl;
     // }
 }

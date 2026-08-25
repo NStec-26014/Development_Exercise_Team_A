@@ -1,4 +1,4 @@
-package com.example.fullness.stationary.service.impl;
+package com.example.fullness.stationary.service.Impl;
 
 import java.util.List;
 

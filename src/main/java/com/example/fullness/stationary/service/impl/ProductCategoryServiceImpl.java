@@ -1,4 +1,4 @@
-package com.example.fullness.stationary.service.impl;
+package com.example.fullness.stationary.service.Impl;
 
 import java.util.List;
 
@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.fullness.stationary.entity.ProductCategory;
+import com.example.fullness.stationary.mapper.ProductCategoryMapper;
 import com.example.fullness.stationary.mapper.ProductCategoryMapper;
 import com.example.fullness.stationary.service.ProductCategoryService;
 
@@ -40,6 +41,10 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
         return categoryMapper.findAll();
     }
 
+    public ProductCategory findById(Long id) {
+        return categoryMapper.findById(id);
+    }
+
     /**
      * 新しいカテゴリをデータベースへ登録する。
      *
@@ -50,9 +55,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
      *
      * @param category 登録対象のカテゴリ情報
      */
-    // @Override
-    // public void saveCategory(ProductCategory category) {
-    // categoryMapper.insert(category);
-    // }
-
+    public void saveProductCategory(ProductCategory category) {
+        categoryMapper.insert(category);
+    }
 }

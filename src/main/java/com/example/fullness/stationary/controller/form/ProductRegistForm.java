@@ -1,4 +1,4 @@
-package com.example.fullness.stationary.form;
+package com.example.fullness.stationary.controller.form;
 
 import lombok.Data;
 
@@ -11,6 +11,6 @@ public class ProductRegistForm {
     private int productCategoryId; // カテゴリID
     private String imageUrl; // 画像URL
     // private int stock;
-    private String categoryName;
+    private String productCategoryName;
 
 }
