@@ -1,9 +1,13 @@
 package com.example.fullness.stationary.entity;
 
+import java.io.Serializable;
+
 import lombok.Data;
 
-import java.io.Serializable;
- 
+/**
+ * DBに保存されている社員アカウントテーブルを定義
+ * 
+ */
 @Data
 public class EmployeeAccount implements Serializable {
 
@@ -13,5 +17,6 @@ public class EmployeeAccount implements Serializable {
     private Integer employeeId;
     private String name;
     private String password;
+    private Employee employee;
 
 }

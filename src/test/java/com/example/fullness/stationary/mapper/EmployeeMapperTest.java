@@ -23,10 +23,9 @@ public class EmployeeMapperTest {
 
         assertNotNull(employee);
         assertAll(
-            () -> assertEquals(1002, employee.getId()),
-            () -> assertEquals(2, employee.getDepartmentId()),
-            () -> assertEquals("山田太郎", employee.getName()),
-            () -> assertEquals("ヤマダタロウ", employee.getName_kana())
-        );
+                () -> assertEquals(1002, employee.getId()),
+                () -> assertEquals(2, employee.getDepartmentId()),
+                () -> assertEquals("山田太郎", employee.getName()),
+                () -> assertEquals("ヤマダタロウ", employee.getNameKana()));
     }
 }

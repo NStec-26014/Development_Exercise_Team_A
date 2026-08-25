@@ -23,7 +23,6 @@ import com.example.fullness.stationary.service.ProductService;
 @RequestMapping("/admin/product")
 @SessionAttributes("productInputForm")
 public class ProductRegistCheckController {
-
     @Autowired
     private ProductService productService;
     @Autowired

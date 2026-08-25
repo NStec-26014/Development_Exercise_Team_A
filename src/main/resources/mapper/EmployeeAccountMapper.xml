@@ -1,9 +1,53 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.fullness.stationary.mapper.EmployeeAccountMapper">
+
+
+    <resultMap id="EmployeeInfomationResult" type="com.example.fullness.stationary.entity.EmployeeAccount">
+        <id property="id" column="id" />
+        <result property="name" column="id" />
+        <result property="name" column="employeeId" />
+        <result property="name" column="name" />
+        <result property="name" column="password" />
+        <association property="employee" javaType="com.example.fullness.stationary.entity.Employee">
+            <id property="id" column="categoryId" />
+            <result property="name" column="id" />
+            <result property="name" column="departmentId" />
+            <result property="name" column="name" />
+            <result property="name" column="nameKana" />
+        </association>
+    </resultMap>
+
+
+   <select id="existsByAccountName" resultType="boolean">
+            SELECT EXISTS
+            (SELECT * FROM employee_account WHERE name = #{accountName})
+    </select>
+
+    <select id="findAllByNameIsNull" resultMap="EmployeeInfomationResult">
+     <![CDATA[ 
+        select e.id ,e.name from employee e left outer join employee_account a 
+        on e.id = a.employee_id  where a.name is null;
+        ]]>
+    </select>
+
+    <select id="findEmployeeNameByEmployeeId" resultType="String">
+     <![CDATA[ 
+        select  name from employee where id = #{employeeId}
+        ]]>
+    </select>
+
+    <insert id="inputEmployeeAccount" parameterType="com.example.fullness.stationary.entity.EmployeeAccount">
+            <selectKey keyProperty="id" resultType="int" order="BEFORE">
+                <![CDATA[
+                    select nextVAL('employee_account_id_seq')
+                ]]>
+            </selectKey>
+        <![CDATA[ 
+        insert into employee_account values (#{id}, #{employeeId}, #{name}, 
+        #{password});
+        ]]>
+    </insert>
     
     <!-- ResultMap定義 -->
     <resultMap id="EmployeeAccountResultMap" type="com.example.fullness.stationary.entity.EmployeeAccount">
