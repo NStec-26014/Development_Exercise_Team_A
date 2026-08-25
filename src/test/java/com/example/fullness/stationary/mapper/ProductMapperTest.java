@@ -11,9 +11,17 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
-import org.springframework.test.context.jdbc.Sql;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.example.fullness.stationary.entity.Product;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.example.fullness.stationary.entity.Product;
 
@@ -69,6 +77,13 @@ public class ProductMapperTest {
         assertEquals(1001, result.getId());
         assertEquals("水性ボールペン(黒)", result.getName());
     }
+    // @Sql(statements = {
+    // "DELETE FROM product;",
+    // "DELETE FROM product_category;",
+    // "INSERT INTO product_category (id, name) VALUES (1, '文房具');",
+    // "INSERT INTO product (id, product_category_id, name, price, image_url,
+    // delete_flag) VALUES (300, 1, '消しゴム', 120, '/images/eraser.png', 0);"
+    // })
 
     // 該当メソッドが後で追加されコンパイルエラー解消
     // void testEditProduct() {
