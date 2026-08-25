@@ -1,33 +1,21 @@
 package com.example.fullness.stationary.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.fullness.stationary.controller.form.ProductRegistForm;
-import com.example.fullness.stationary.entity.Product;
-import com.example.fullness.stationary.mapper.ProductMapper;
-import com.example.fullness.stationary.service.impl.ProductServiceImpl;
 
 @Controller
 @Transactional
 @RequestMapping("/admin/product")
 @SessionAttributes("productInputForm")
 public class ProductRegistCompleteController {
-
-    @Autowired
-    private ProductServiceImpl productService;
-    @Autowired
-    private ProductMapper productMapper;
-
     // 完了画面表示処理
     @GetMapping("/add/complete")
     public String complete(

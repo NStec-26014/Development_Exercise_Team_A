@@ -11,28 +11,19 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.bind.annotation.SessionAttribute;
-import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import com.example.fullness.stationary.service.impl.ProductServiceImpl;
-import com.example.fullness.stationary.service.impl.ProductCategoryServiceImpl;
 import com.example.fullness.stationary.controller.form.ProductRegistForm;
 import com.example.fullness.stationary.service.ProductCategoryService;
-import com.example.fullness.stationary.service.ProductService;
 import com.example.fullness.stationary.validator.ProductRegistValidator;
 
 @Controller
 @RequestMapping("/admin/product")
 @SessionAttributes("productInputForm") // productInputFormというモデルを属性をセッションに保存する
 public class ProductRegistInputController {
-
-    @Autowired
-    private ProductServiceImpl productService;
     @Autowired
     private ProductRegistValidator productResistValidator; // 依存注入
     @Autowired
-    private ProductCategoryServiceImpl productCategoryServiceImpl;
+    private ProductCategoryService productCategoryService;
 
     @ModelAttribute("productInputForm")
     public ProductRegistForm productResistForm() {
@@ -53,7 +44,7 @@ public class ProductRegistInputController {
         }
 
         try {
-            model.addAttribute("categories", productCategoryServiceImpl.getAllCategories());
+            model.addAttribute("categories", productCategoryService.getAllCategories());
             // サービスクラスのカテゴリ一覧を取得
         } catch (Exception e) {
 
@@ -72,7 +63,7 @@ public class ProductRegistInputController {
         productResistValidator.validate(form, result); // 入力チェックを実行
 
         if (result.hasErrors()) {
-            model.addAttribute("categories", productCategoryServiceImpl.getAllCategories());
+            model.addAttribute("categories", productCategoryService.getAllCategories());
 
             return "admin/add_form"; // エラーなら入力画面に戻す
         }
