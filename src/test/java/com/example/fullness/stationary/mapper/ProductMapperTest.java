@@ -25,7 +25,7 @@ public class ProductMapperTest {
 
         assertEquals(10, result.size());
     }
-
+6
     @Test
     public void Case2_findByCategoryIdWithPaging_OK() {
 
