@@ -1,4 +1,4 @@
-package com.example.fullness.stationary.service.Impl;
+package com.example.fullness.stationary.service.impl;
 
 import com.example.fullness.stationary.entity.EmployeeAccount;
 import com.example.fullness.stationary.mapper.EmployeeAccountMapper;

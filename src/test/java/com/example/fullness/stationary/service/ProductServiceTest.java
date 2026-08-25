@@ -18,8 +18,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.example.fullness.stationary.entity.Product;
 import com.example.fullness.stationary.mapper.ProductCategoryMapper;
 import com.example.fullness.stationary.mapper.ProductMapper;
-import com.example.fullness.stationary.service.Impl.ProductServiceImpl;
-import com.example.fullness.stationary.service.Impl.ProductServiceImpl;
+import com.example.fullness.stationary.service.impl.ProductServiceImpl;
+import com.example.fullness.stationary.service.impl.ProductServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 

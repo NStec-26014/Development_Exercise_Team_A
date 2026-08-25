@@ -17,8 +17,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.fullness.stationary.entity.ProductCategory;
 import com.example.fullness.stationary.controller.form.ProductEditForm;
 import com.example.fullness.stationary.entity.Product;
-import com.example.fullness.stationary.service.Impl.ProductCategoryServiceImpl;
-import com.example.fullness.stationary.service.Impl.ProductServiceImpl;
+import com.example.fullness.stationary.service.impl.ProductCategoryServiceImpl;
+import com.example.fullness.stationary.service.impl.ProductServiceImpl;
 import com.example.fullness.stationary.validator.ProductEditValidator;
 
 import jakarta.servlet.http.HttpSession;

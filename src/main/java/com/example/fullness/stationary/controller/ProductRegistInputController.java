@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.fullness.stationary.service.Impl.ProductServiceImpl;
-import com.example.fullness.stationary.service.Impl.ProductCategoryServiceImpl;
+import com.example.fullness.stationary.service.impl.ProductServiceImpl;
+import com.example.fullness.stationary.service.impl.ProductCategoryServiceImpl;
 import com.example.fullness.stationary.controller.form.ProductRegistForm;
 import com.example.fullness.stationary.service.ProductCategoryService;
 import com.example.fullness.stationary.service.ProductService;

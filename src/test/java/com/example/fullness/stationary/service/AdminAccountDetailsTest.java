@@ -2,7 +2,7 @@ package com.example.fullness.stationary.service;
 
 import com.example.fullness.stationary.entity.EmployeeAccount;
 import com.example.fullness.stationary.mapper.EmployeeAccountMapper;
-import com.example.fullness.stationary.service.Impl.AdminAccountDetailsImpl;
+import com.example.fullness.stationary.service.impl.AdminAccountDetailsImpl;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

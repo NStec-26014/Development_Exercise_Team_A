@@ -16,8 +16,8 @@ import com.example.fullness.stationary.entity.ProductCategory;
 import com.example.fullness.stationary.controller.form.ProductRegistForm;
 import com.example.fullness.stationary.entity.Product;
 import com.example.fullness.stationary.mapper.ProductCategoryMapper;
-import com.example.fullness.stationary.service.Impl.ProductCategoryServiceImpl;
-import com.example.fullness.stationary.service.Impl.ProductServiceImpl;
+import com.example.fullness.stationary.service.impl.ProductCategoryServiceImpl;
+import com.example.fullness.stationary.service.impl.ProductServiceImpl;
 
 @Controller
 @RequestMapping("/admin/product")
