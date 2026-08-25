@@ -23,4 +23,6 @@ public interface EmployeeAccountMapper {
 
     int inputEmployeeAccount(EmployeeAccount employeeAccount);
 
+    EmployeeAccount selectByName(String name);
+
 }

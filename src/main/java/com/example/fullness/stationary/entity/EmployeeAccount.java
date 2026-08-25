@@ -10,17 +10,13 @@ import lombok.Data;
  */
 @Data
 public class EmployeeAccount implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private Integer id;
     private Integer employeeId;
     private String name;
     private String password;
     private Employee employee;
-
-    // public EmployeeAccount(Integer employeeId, String name, String password) {
-
-    // this.employeeId = employeeId;
-    // this.name = name;
-    // this.password = password;
-    // }
 
 }

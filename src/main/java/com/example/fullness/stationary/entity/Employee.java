@@ -12,9 +12,4 @@ public class Employee implements Serializable {
     private String name;
     private String nameKana;
 
-    // public Employee(long id, String name) {
-    // this.id = id;
-    // this.name = name;
-    // }
-
 }
