@@ -1,4 +1,4 @@
-package com.example.fullness.stationary;
+package com.example.fullness.stationary.service;
 
 import static org.mockito.Mockito.verify;
 
@@ -8,26 +8,26 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.example.fullness.stationary.entity.Category;
-import com.example.fullness.stationary.mapper.CategoryMapper;
-import com.example.fullness.stationary.service.CategoryService;
+import com.example.fullness.stationary.entity.ProductCategory;
+import com.example.fullness.stationary.mapper.ProductCategoryMapper;
+import com.example.fullness.stationary.service.impl.ProductCategoryServiceImpl;
 
 //CategoryServiceの単体テストを行うクラス
 @ExtendWith(MockitoExtension.class)
-public class CategoryServiceTest {
+public class ProductCategoryServiceTest {
 
     @InjectMocks
-    private CategoryService categoryService;
+    private ProductCategoryServiceImpl categoryService;
     @Mock
-    private CategoryMapper categoryMapper;
+    private ProductCategoryMapper categoryMapper;
 
     // Serviceの登録メソッドを呼び出すときにMapperのinsertメソッドが正しく実行されることを検証
     @Test
     void saveCategory_shouldDelegateToCategoryMapper() {
 
-        Category category = new Category("雑貨");
+        ProductCategory category = new ProductCategory("雑貨");
 
-        categoryService.saveCategory(category);
+        categoryService.saveProductCategory(category);
 
         verify(categoryMapper).insert(category);
     }

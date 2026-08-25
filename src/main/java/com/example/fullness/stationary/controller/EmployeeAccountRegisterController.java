@@ -1,20 +1,17 @@
 package com.example.fullness.stationary.controller;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.fullness.stationary.config.TextEncoder;
 import com.example.fullness.stationary.controller.form.EmployeeAccountForm;
@@ -23,7 +20,6 @@ import com.example.fullness.stationary.entity.EmployeeAccount;
 import com.example.fullness.stationary.service.impl.EmployeeAccountServiceImpl;
 
 import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 
 /**
  * コントローラークラス
@@ -69,18 +65,20 @@ public class EmployeeAccountRegisterController {
 
     @PostMapping("/validate")
     public String employeeAccountValidateInput(
-            @Valid @ModelAttribute EmployeeAccountForm employeeAccountForm,
-            BindingResult bindingResult, HttpSession session, RedirectAttributes ra, Model model) {
+            @Validated @ModelAttribute EmployeeAccountForm employeeAccountForm,
+            BindingResult bindingResult, HttpSession session, Model model) {
         boolean canRegisterAccountName = employeeAccountServiceImpl
                 .canRegisterAccountName(employeeAccountForm.getAccountName());
-
+        System.out.println(canRegisterAccountName);
         // 入力チェック
-        if (bindingResult.hasErrors()) {
-            List<String> errorMessages = bindingResult.getFieldErrors().stream().map(FieldError::getDefaultMessage)
-                    .toList();
-            ra.addFlashAttribute("errorMessages", errorMessages);
-            return "redirect:/admin/account/form";
-        }
+        // if (bindingResult.hasErrors()) {
+        // // ra.addFlashAttribute(employeeAccountForm);
+        // // ra.addFlashAttribute(BindingResult.MODEL_KEY_PREFIX +
+        // // Conventions.getVariableName(employeeAccountForm),
+        // // bindingResult);
+        // // return "redirect:/admin/account/form";
+        // return "redirect:/admin/account/form";
+        // }
 
         // 重複チェック
         // エラーメッセージを表示させる
@@ -149,7 +147,7 @@ public class EmployeeAccountRegisterController {
             return "redirect:/admin/account/complete";
         } else {
             // 例外発生でエラーを返す
-            return "admin/error";
+            return "/error"; // 仮のURL
         }
     }
 

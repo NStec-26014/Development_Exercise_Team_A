@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.fullness.stationary.entity.ProductCategory;
 import com.example.fullness.stationary.mapper.ProductCategoryMapper;
+import com.example.fullness.stationary.mapper.ProductCategoryMapper;
 import com.example.fullness.stationary.service.ProductCategoryService;
 
 /**
@@ -40,6 +41,10 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
         return categoryMapper.findAll();
     }
 
+    public ProductCategory findById(Long id) {
+        return categoryMapper.findById(id);
+    }
+
     /**
      * 新しいカテゴリをデータベースへ登録する。
      *
@@ -50,9 +55,13 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
      *
      * @param category 登録対象のカテゴリ情報
      */
-    // @Override
-    // public void saveCategory(ProductCategory category) {
-    // categoryMapper.insert(category);
-    // }
+    public void saveProductCategory(ProductCategory category) {
+        categoryMapper.insert(category);
+    }
 
+    @Override
+    public boolean isDuplicate(String categoryName) {
+        ProductCategory existingCategory = categoryMapper.findByCategoryName(categoryName);
+        return existingCategory != null;
+    }
 }

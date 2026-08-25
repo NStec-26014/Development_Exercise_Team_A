@@ -5,13 +5,24 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.fullness.stationary.entity.ProductCategory;
+import com.example.fullness.stationary.controller.form.ProductEditForm;
 import com.example.fullness.stationary.entity.Product;
+import com.example.fullness.stationary.service.impl.ProductCategoryServiceImpl;
+import com.example.fullness.stationary.service.impl.ProductServiceImpl;
+import com.example.fullness.stationary.validator.ProductEditValidator;
+
+import jakarta.servlet.http.HttpSession;
+
 import com.example.fullness.stationary.service.ProductCategoryService;
 import com.example.fullness.stationary.service.ProductService;
 
@@ -36,10 +47,26 @@ import com.example.fullness.stationary.service.ProductService;
 public class ProductController {
 
     @Autowired
-    private ProductService productService;
+    private ProductServiceImpl productServiceImpl;
 
     @Autowired
     private ProductCategoryService productCategoryService;
+
+    @Autowired
+    private ProductCategoryServiceImpl categoryServiceImpl;
+
+    @Autowired
+    ProductEditValidator productEditValidator;
+
+    @ModelAttribute("productEditForm")
+    public ProductEditForm productEditForm() {
+        return new ProductEditForm();
+    }
+
+    @GetMapping("/")
+    public String home() {
+        return "redirect:/admin/product";
+    }
 
     /**
      * 商品一覧画面を表示する。
@@ -58,7 +85,7 @@ public class ProductController {
      * @param model    表示用のモデルオブジェクト。カテゴリ一覧、商品一覧、選択中カテゴリ、総ページ数を格納する
      * @return 商品一覧画面を表す Thymeleaf URL {@code admin/product}
      */
-    @GetMapping
+    @GetMapping("")
     public String showProductList(
             @RequestParam(name = "category", required = false, defaultValue = "0") Long category,
             @RequestParam(name = "page", defaultValue = "1") int page,
@@ -69,14 +96,14 @@ public class ProductController {
         List<ProductCategory> categories = productCategoryService.getAllCategories();
 
         // 2. 商品検索
-        List<Product> products = productService.getProductsByCategoryWithPaging(category, page, pageSize);
+        List<Product> products = productServiceImpl.getProductsByProductCategoryWithPaging(category, page, pageSize);
 
-        int totalCount = productService.countProductsByCategory(category);
+        int totalCount = productServiceImpl.countProductsByProductCategory(category);
         int totalPages = (int) Math.ceil((double) totalCount / pageSize);
         // 3. Modelにデータを詰める
         model.addAttribute("categories", categories);
         model.addAttribute("products", products);
-        model.addAttribute("selectedCategory", category);
+        model.addAttribute("selectedProductCategory", category);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("currentPage", page);
 
@@ -84,21 +111,121 @@ public class ProductController {
         return "admin/product"; // → templates/admin/product.html
     }
 
-    /**
-     * 商品削除確認画面を表示する。
-     *
-     * <p>
-     * 一覧画面の削除リンクから遷移される画面であり、削除対象の商品IDを画面に渡す。
-     * 実削除処理自体はこのコントローラでは行わず、別の処理に任せる想定で、削除確認画面の表示のみを担当する。
-     *
-     * @param id    削除対象の商品ID
-     * @param model 削除対象IDをビューへ渡すためのモデル
-     * @return 商品削除確認画面URL {@code admin/product-delete}
-     */
+    // 確認画面を表示するメソッド
     @GetMapping("/delete/{id}")
-    public String showDeletePage(@PathVariable Long id, Model model) {
-        model.addAttribute("productId", id);
-        return "admin/product-delete";
+
+    public String ShowProductDeleteConfirm(@PathVariable("id") Long id, HttpSession session, Model model) {
+        // Product型の情報をidを基に取得して追加する
+        model.addAttribute("product", productServiceImpl.findById(id));
+        String categoryName = categoryServiceImpl
+                .findById(productServiceImpl.findById(id).getProductCategoryId())
+                .getName();
+        model.addAttribute("categoryName", categoryName);
+        session.setAttribute("deleteId", id);
+        session.setAttribute("deleteName", productServiceImpl.findById(id).getName());
+
+        // 確認画面に遷移する
+        return ("admin/product/delete_confirm");
+    }
+
+    // 削除を実行するメソッド
+    @PostMapping("/delete/doDelete")
+    public String doDeleteProduct(HttpSession session, Model model) {
+        // 削除が完了（true）が返ってきたときに完了画面に遷移する
+        boolean success = productServiceImpl.deleteProduct((Long) session.getAttribute("deleteId"));
+        if (success) {
+            return ("redirect:/admin/product/delete/complete");
+        }
+        // エラーメッセージを保持させる
+        return "redirect:/admin/product/delete/confirm";
+
+    }
+
+    // 完了画面を表示するメソッド
+    @GetMapping("/delete/complete")
+    public String ShowProductDeleteComplete(HttpSession session, Model model) {
+        // 商品名に入る情報を取得
+        model.addAttribute("deleteName", session.getAttribute("deleteName"));
+
+        // 完了画面に遷移する
+        return ("admin/product/delete_complete");
+    }
+
+    @PostMapping("/edit")
+    public String editProduct(
+            @ModelAttribute("form") ProductEditForm form,
+            BindingResult bindingResult,
+            @RequestParam(name = "category", required = false, defaultValue = "0") Long category,
+            Model model) {
+
+        productEditValidator.validate(form, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            List<ProductCategory> categories = productServiceImpl.getAllCategories();
+            List<Product> products = productServiceImpl.searchProducts(category);
+            model.addAttribute("categories", categories);
+            model.addAttribute("products", products);
+            model.addAttribute("selectedProductCategory", category);
+            return "admin/product/edit_form";
+        }
+
+        // ⭕ ここから下に2行追加します！
+        // 確認画面でもカテゴリの一覧情報が必要なので、データベースから取得してModelに詰めます
+        List<ProductCategory> categories = productServiceImpl.getAllCategories();
+        model.addAttribute("categories", categories);
+
+        Product product = new Product();
+        product.setId(form.getId());
+        product.setName(form.getName());
+        product.setPrice(form.getPrice());
+        product.setProductCategoryId(form.getProductCategoryId());
+        product.setImageUrl(form.getImageUrl());
+        product.setQuantity(form.getQuantity());
+
+        product.setDeleteFlag(0);
+
+        productServiceImpl.editProduct(product);
+
+        model.addAttribute("form", form);
+        return "admin/product/edit_confirm";
+    }
+
+    // 💡 入力画面の form で指定したURL「/admin/product/edit/confirm」をここで待ち受けます
+    @PostMapping("/edit/confirm")
+    public String editConfirm(
+            @ModelAttribute("form") ProductEditForm form,
+            @RequestParam(name = "action", required = false) String action, // 💡HTMLの name="action" をここで受け取ります
+            RedirectAttributes redirectAttributes,
+            Model model) {
+        // 1. 💡 もし「戻る」ボタン（value="back"）が押されていた場合
+        if ("back".equals(action)) {
+            model.addAttribute("categories", productServiceImpl.getAllCategories());
+            model.addAttribute("form", form); // 入力内容をそのままキープ
+            return "admin/product/edit_form"; // ➔ 入力画面（edit_form）へ戻します！
+        }
+
+        // 2. 💡 もし「完了」ボタン（value="complete"）が押されていた場合（保存処理）
+        else if ("complete".equals(action)) {
+            Product product = new Product();
+            product.setId(form.getId());
+            product.setName(form.getName());
+            product.setPrice(form.getPrice());
+            product.setDeleteFlag(0);
+            product.setProductCategoryId(form.getProductCategoryId());
+            product.setImageUrl(form.getImageUrl());
+            product.setQuantity(form.getQuantity());
+
+            // データベースを更新します
+            productServiceImpl.editProduct(product);
+
+            // 💡 完了画面の ${productName} に修正後の商品名を届けます！
+            redirectAttributes.addFlashAttribute("productName", form.getName());
+
+            // 保存が終わったら、完了画面へ自動で戻します（リダイレクト）
+            return "redirect:/admin/product/edit/complete";
+
+        }
+        return "redirect:/admin/product";
     }
 
     /**
@@ -113,6 +240,42 @@ public class ProductController {
      * @return 商品修正画面URL {@code admin/product-edit}
      */
     @GetMapping("/edit/{id}")
+    public String showEditForm(
+            @PathVariable(value = "id") Long id, // 修正対象の商品ID
+            @RequestParam(name = "category", required = false, defaultValue = "0") Long category,
+            Model model) {
+
+        Product product = productServiceImpl.findById(id);
+        if (product == null) {
+            return "redirect:/admin/product?category=" + category;
+        }
+
+        ProductEditForm form = new ProductEditForm();
+        form.setId(product.getId());
+        form.setName(product.getName());
+        form.setPrice(product.getPrice());
+        form.setQuantity(product.getQuantity());
+        form.setProductCategoryId(product.getProductCategoryId());
+        form.setImageUrl(product.getImageUrl());
+
+        model.addAttribute("form", form);
+
+        List<ProductCategory> categories = productServiceImpl.getAllCategories();
+        List<Product> products = productServiceImpl.searchProducts(category);
+        model.addAttribute("categories", categories);
+        model.addAttribute("products", products);
+        model.addAttribute("selectedProductCategory", category);
+
+        return "admin/product/edit_form";
+    }
+
+    // 💡 完了画面（edit_complete.html）を表示するための設定で
+    @GetMapping("/edit/complete")
+    public String showEditCompletePage() {
+        // templates/admin/edit_complete.html を表示する
+        return "admin/product/edit_complete";
+    }
+
     public String showEditPage(@PathVariable Long id, Model model) {
         model.addAttribute("productId", id);
         return "admin/product-edit";

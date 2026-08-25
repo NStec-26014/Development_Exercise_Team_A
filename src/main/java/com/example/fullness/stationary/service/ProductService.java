@@ -2,15 +2,9 @@ package com.example.fullness.stationary.service;
 
 import java.util.List;
 
+import com.example.fullness.stationary.entity.ProductCategory;
 import com.example.fullness.stationary.entity.Product;
 
-/**
- * 商品に関する業務処理のインターフェース。
- *
- * <p>
- * Controller はこのインターフェースに依存し、
- * 実際の実装は {@code service.impl} 配下の実装クラスに委譲する。
- */
 public interface ProductService {
 
     /**
@@ -21,7 +15,7 @@ public interface ProductService {
      * @param pageSize 1ページあたりの件数
      * @return 条件に一致する商品一覧
      */
-    List<Product> getProductsByCategoryWithPaging(Long id, int page, int pageSize);
+    List<Product> getProductsByProductCategoryWithPaging(Long id, int page, int pageSize);
 
     /**
      * 指定カテゴリの商品総件数を取得する。
@@ -29,7 +23,7 @@ public interface ProductService {
      * @param id 検索対象カテゴリID
      * @return 商品件数
      */
-    int countProductsByCategory(Long id);
+    int countProductsByProductCategory(Long id);
 
     /**
      * 商品IDをもとに単一の商品情報を取得する。
@@ -39,10 +33,18 @@ public interface ProductService {
      */
     Product findById(Long id);
 
-     // 商品登録
+    List<ProductCategory> getAllCategories();
+
+    List<Product> searchProducts(Long categoryId);
+
+    // 商品登録
     void saveProduct(Product product);
-    
 
+    void saveProductCategory(ProductCategory category);
 
+    // 商品削除が完了するとtrueを返す
+    boolean deleteProduct(Long id);
+
+    void editProduct(Product product);
 
 }

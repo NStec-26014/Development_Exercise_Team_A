@@ -5,9 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.fullness.stationary.entity.Category;
+import com.example.fullness.stationary.entity.ProductCategory;
 import com.example.fullness.stationary.entity.Product;
-import com.example.fullness.stationary.mapper.CategoryMapper;
+import com.example.fullness.stationary.mapper.ProductCategoryMapper;
 import com.example.fullness.stationary.mapper.ProductMapper;
 import com.example.fullness.stationary.service.ProductService;
 
@@ -28,7 +28,7 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductMapper productMapper;
     @Autowired
-    private CategoryMapper categoryMapper;
+    private ProductCategoryMapper categoryMapper;
 
     /**
      * カテゴリ条件に応じて商品一覧をページ単位で取得する。
@@ -44,13 +44,13 @@ public class ProductServiceImpl implements ProductService {
      * @return 条件に合致する商品一覧
      */
     @Override
-    public List<Product> getProductsByCategoryWithPaging(Long id, int page, int pageSize) {
+    public List<Product> getProductsByProductCategoryWithPaging(Long id, int page, int pageSize) {
         int offset = (page - 1) * pageSize;
 
         if (id == null || id == 0) {
             return productMapper.findAllWithPaging(offset, pageSize);
         } else {
-            return productMapper.findByCategoryIdWithPaging(id, offset, pageSize);
+            return productMapper.findByProductCategoryIdWithPaging(id, offset, pageSize);
         }
     }
 
@@ -66,11 +66,11 @@ public class ProductServiceImpl implements ProductService {
      * @return 指定条件に一致する商品の総件数
      */
     @Override
-    public int countProductsByCategory(Long id) {
+    public int countProductsByProductCategory(Long id) {
         if (id == null || id == 0) {
             return productMapper.countAll();
         } else {
-            return productMapper.countByCategoryId(id);
+            return productMapper.countByProductCategoryId(id);
         }
     }
 
@@ -90,7 +90,7 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.findById(id);
     }
 
-    public List<Category> getAllCategories() {
+    public List<ProductCategory> getAllCategories() {
         return categoryMapper.findAll();
     }
 
@@ -99,7 +99,7 @@ public class ProductServiceImpl implements ProductService {
         if (categoryId == null || categoryId == 0) {
             return productMapper.findAll();
         }
-        return productMapper.findByCategoryId(categoryId);
+        return productMapper.findByProductCategoryId(categoryId);
     }
 
     // 商品登録
@@ -108,12 +108,23 @@ public class ProductServiceImpl implements ProductService {
     }
 
     // カテゴリ登録
-    public void saveCategory(Category category) {
+    public void saveProductCategory(ProductCategory category) {
         categoryMapper.insert(category);
     }
 
     // 商品削除（論理削除）
-    public void deleteProduct(Long id) {
-        productMapper.deleteById(id);
+    public boolean deleteProduct(Long id) {
+        if (productMapper.deleteById(id) == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // 商品修正
+    public void editProduct(Product product) {
+        productMapper.edit(product);
+
+        productMapper.updateStock(product.getId(), product.getQuantity());
     }
 }

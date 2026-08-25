@@ -64,6 +64,4 @@ class AdminAccountDetailsTest {
         verify(employeeAccountMapper, times(1)).selectByName(username);
     }
 
-    
-
 }

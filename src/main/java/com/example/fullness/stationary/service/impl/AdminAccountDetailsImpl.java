@@ -11,14 +11,15 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AdminAccountDetailsImpl implements UserDetailsService{
+public class AdminAccountDetailsImpl implements UserDetailsService {
 
-
-    @Autowired
+	@Autowired
 	private EmployeeAccountMapper employeeAccountMapper;
+
 	public AdminAccountDetailsImpl(EmployeeAccountMapper employeeAccountMapper) {
 		this.employeeAccountMapper = employeeAccountMapper;
 	}
+
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		EmployeeAccount account = employeeAccountMapper.selectByName(username);

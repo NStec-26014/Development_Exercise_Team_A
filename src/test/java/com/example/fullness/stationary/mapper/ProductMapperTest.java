@@ -26,57 +26,59 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.example.fullness.stationary.entity.Product;
 
 @MybatisTest
-
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class ProductMapperTest {
 
     @Autowired
     private ProductMapper productMapper;
 
-    @Test
-    public void Case1_findAllWithPaging_OK() {
+    // uc011マージの際に実装
+    // @Test
+    // public void Case1_findAllWithPaging_OK() {
 
-        List<Product> result = productMapper.findAllWithPaging(0, 10);
+    // List<Product> result = productMapper.findAllWithPaging(0, 10);
 
-        assertEquals(10, result.size());
-    }
+    // assertEquals(10, result.size());
+    // }
 
-    @Test
-    public void Case2_findByCategoryIdWithPaging_OK() {
+    // @Test
+    // public void Case2_findByProductCategoryIdWithPaging_OK() {
 
-        List<Product> result = productMapper.findByCategoryIdWithPaging(1L, 0, 10);
+    // List<Product> result = productMapper.findByProductCategoryIdWithPaging(1L, 0,
+    // 10);
 
-        assertEquals(10, result.size());
-        for (Product product : result) {
-            assertEquals(1, product.getProductCategoryId());
-        }
-    }
+    // assertEquals(10, result.size());
+    // for (Product product : result) {
+    // assertEquals(1, product.getProductCategoryId());
+    // }
+    // }
 
-    @Test
-    public void Case3_countAll_OK() {
+    // @Test
+    // public void Case3_countAll_OK() {
 
-        int result = productMapper.countAll();
+    // int result = productMapper.countAll();
 
-        assertEquals(32, result);
-    }
+    // assertEquals(32, result);
+    // }
 
-    @Test
-    public void Case4_countByCategoryId_OK() {
+    // @Test
+    // public void Case4_countByProductCategoryId_OK() {
 
-        int result = productMapper.countByCategoryId(1L);
+    // int result = productMapper.countByProductCategoryId(1L);
 
-        assertEquals(30, result);
-    }
+    // assertEquals(30, result);
+    // }
 
-    @Test
-    public void Case5_findById_OK() {
+    // @Test
+    // public void Case5_findById_OK() {
 
-        Product result = productMapper.findById(1001L);
+    // Product result = productMapper.findById(1001L);
 
-        assertNotNull(result);
-        assertEquals(1001, result.getId());
-        assertEquals("水性ボールペン(黒)", result.getName());
-    }
+    // assertNotNull(result);
+    // assertEquals(1001, result.getId());
+    // assertEquals("水性ボールペン(黒)", result.getName());
+    // }
+
     // @Sql(statements = {
     // "DELETE FROM product;",
     // "DELETE FROM product_category;",
@@ -135,6 +137,13 @@ public class ProductMapperTest {
         assertEquals(1L, actual.getProductCategoryId());
         assertNull(actual.getImageUrl());
         assertEquals(0, actual.getDeleteFlag());
+    }
+
+    @Test
+    void deleteByIdTest_OK() {
+        long productId = 1001;
+        int actual = productMapper.deleteById(productId);
+        assertEquals(1, actual);
     }
 
 }

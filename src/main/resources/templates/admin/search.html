@@ -19,7 +19,7 @@
                 <select name="categoryId" class="form-select w-auto">
                     <option value="">すべて</option>
                     <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"
-                        th:selected="${selectedCategoryId != null and selectedCategoryId == cat.id}"></option>
+                        th:selected="${selectedProductCategoryId != null and selectedProductCategoryId == cat.id}"></option>
                 </select>
                 <button type="submit" class="btn btn-fs">カテゴリ検索</button>
                 <a th:href="@{/admin/product/add}" class="btn btn-fs-solid">商品追加</a>
@@ -54,24 +54,24 @@
                 <ul class="pagination justify-content-center">
                     <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
                         <a class="page-link"
-                            th:href="@{/admin/product(categoryId=${selectedCategoryId}, page=1)}">最初</a>
+                            th:href="@{/admin/product(categoryId=${selectedProductCategoryId}, page=1)}">最初</a>
                     </li>
                     <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
                         <a class="page-link"
-                            th:href="@{/admin/product(categoryId=${selectedCategoryId}, page=${currentPage - 1})}">前へ</a>
+                            th:href="@{/admin/product(categoryId=${selectedProductCategoryId}, page=${currentPage - 1})}">前へ</a>
                     </li>
                     <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}"
                         th:classappend="${i == currentPage} ? 'active'">
-                        <a class="page-link" th:href="@{/admin/product(categoryId=${selectedCategoryId}, page=${i})}"
+                        <a class="page-link" th:href="@{/admin/product(categoryId=${selectedProductCategoryId}, page=${i})}"
                             th:text="${i}"></a>
                     </li>
                     <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
                         <a class="page-link"
-                            th:href="@{/admin/product(categoryId=${selectedCategoryId}, page=${currentPage + 1})}">次へ</a>
+                            th:href="@{/admin/product(categoryId=${selectedProductCategoryId}, page=${currentPage + 1})}">次へ</a>
                     </li>
                     <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
                         <a class="page-link"
-                            th:href="@{/admin/product(categoryId=${selectedCategoryId}, page=${totalPages})}">最後</a>
+                            th:href="@{/admin/product(categoryId=${selectedProductCategoryId}, page=${totalPages})}">最後</a>
                     </li>
                 </ul>
             </nav>
