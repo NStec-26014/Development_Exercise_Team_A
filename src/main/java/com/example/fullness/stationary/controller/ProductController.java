@@ -229,23 +229,6 @@ public class ProductController {
     }
 
     /**
-     * 商品削除確認画面を表示する。
-     *
-     * <p>
-     * 一覧画面の削除リンクから遷移される画面であり、削除対象の商品IDを画面に渡す。
-     * 実削除処理自体はこのコントローラでは行わず、別の処理に任せる想定で、削除確認画面の表示のみを担当する。
-     *
-     * @param id    削除対象の商品ID
-     * @param model 削除対象IDをビューへ渡すためのモデル
-     * @return 商品削除確認画面URL {@code admin/product-delete}
-     */
-    @GetMapping("/delete/{id}")
-    public String showDeletePage(@PathVariable Long id, Model model) {
-        model.addAttribute("productId", id);
-        return "admin/product-delete";
-    }
-
-    /**
      * 商品修正画面を表示する。
      *
      * <p>
