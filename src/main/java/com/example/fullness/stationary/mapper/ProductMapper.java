@@ -7,20 +7,73 @@ import org.apache.ibatis.annotations.Param;
 
 import com.example.fullness.stationary.entity.Product;
 
+/**
+ * 商品テーブルへのデータアクセスを定義する Mapper。
+ *
+ * <p>
+ * MyBatis により SQL を実行し、商品一覧取得、カテゴリ別絞り込み、件数取得、
+ * 単一商品の取得、登録、削除処理（担当ではない）を担当する。
+ *
+ * <p>
+ * 画面表示や業務処理で必要とされる商品情報を SQL ベースで取得・更新する責務を持つ。
+ */
 @Mapper
 public interface ProductMapper {
 
-    List<Product> findAll();
+        /**
+         * 商品をページ単位で全件取得する。
+         *
+         * @param offset   取得開始位置
+         * @param pageSize 1ページあたりの件数
+         * @return 商品一覧
+         */
+        List<Product> findAllWithPaging(@Param("offset") int offset,
+                        @Param("pageSize") int pageSize);
 
-    List<Product> findByCategoryId(Long categoryId);
+        /**
+         * 指定カテゴリの商品をページ単位で取得する。
+         *
+         * @param categoryId カテゴリID
+         * @param offset     取得開始位置
+         * @param pageSize   1ページあたりの件数
+         * @return 該当カテゴリの商品一覧
+         */
+        List<Product> findByProductCategoryIdWithPaging(@Param("categoryId") Long categoryId,
+                        @Param("offset") int offset,
+                        @Param("pageSize") int pageSize);
 
-    Product findById(Long id);
+        /**
+         * 全商品件数を取得する。
+         *
+         * @return 全商品件数
+         */
+        int countAll();
 
-    int insert(Product product);
+        /**
+         * 指定カテゴリの商品件数を取得する。
+         *
+         * @param categoryId カテゴリID
+         * @return 対象カテゴリの商品件数
+         */
+        int countByProductCategoryId(@Param("categoryId") Long categoryId);
 
-    int edit(Product product);
+        /**
+         * 商品IDをキーに単一の商品を取得する。
+         *
+         * @param id 商品ID
+         * @return 商品情報
+         */
+        Product findById(Long id);
 
-    int deleteById(Long id);
+        List<Product> findAll();
 
-    int updateStock(@Param("id") Long id, @Param("quantity") Integer quantity);
+        List<Product> findByProductCategoryId(Long categoryId);
+
+        int insert(Product product);
+
+        int edit(Product product);
+
+        int deleteById(Long id);
+
+        int updateStock(@Param("id") Long id, @Param("quantity") Integer quantity);
 }

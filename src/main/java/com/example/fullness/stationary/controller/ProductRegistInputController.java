@@ -15,8 +15,11 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.fullness.stationary.form.ProductRegistForm;
 import com.example.fullness.stationary.service.Impl.ProductServiceImpl;
+import com.example.fullness.stationary.service.Impl.ProductCategoryServiceImpl;
+import com.example.fullness.stationary.controller.form.ProductRegistForm;
+import com.example.fullness.stationary.service.ProductCategoryService;
+import com.example.fullness.stationary.service.ProductService;
 import com.example.fullness.stationary.validator.ProductRegistValidator;
 
 @Controller
@@ -28,6 +31,8 @@ public class ProductRegistInputController {
     private ProductServiceImpl productService;
     @Autowired
     private ProductRegistValidator productResistValidator; // 依存注入
+    @Autowired
+    private ProductCategoryServiceImpl productCategoryServiceImpl;
 
     @ModelAttribute("productInputForm")
     public ProductRegistForm productResistForm() {
@@ -48,7 +53,7 @@ public class ProductRegistInputController {
         }
 
         try {
-            model.addAttribute("categories", productService.getAllCategories());
+            model.addAttribute("categories", productCategoryServiceImpl.getAllCategories());
             // サービスクラスのカテゴリ一覧を取得
         } catch (Exception e) {
 
@@ -67,7 +72,7 @@ public class ProductRegistInputController {
         productResistValidator.validate(form, result); // 入力チェックを実行
 
         if (result.hasErrors()) {
-            model.addAttribute("categories", productService.getAllCategories());
+            model.addAttribute("categories", productCategoryServiceImpl.getAllCategories());
 
             return "admin/add_form"; // エラーなら入力画面に戻す
         }

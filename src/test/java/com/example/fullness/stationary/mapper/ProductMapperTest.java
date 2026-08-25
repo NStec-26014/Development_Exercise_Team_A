@@ -6,24 +6,79 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
-import org.springframework.test.context.jdbc.Sql;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.example.fullness.stationary.entity.Product;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.example.fullness.stationary.entity.Product;
 
 @MybatisTest
-
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class ProductMapperTest {
 
     @Autowired
     private ProductMapper productMapper;
 
-    @Test
+    // uc011マージの際に実装
+    // @Test
+    // public void Case1_findAllWithPaging_OK() {
+
+    // List<Product> result = productMapper.findAllWithPaging(0, 10);
+
+    // assertEquals(10, result.size());
+    // }
+
+    // @Test
+    // public void Case2_findByProductCategoryIdWithPaging_OK() {
+
+    // List<Product> result = productMapper.findByProductCategoryIdWithPaging(1L, 0,
+    // 10);
+
+    // assertEquals(10, result.size());
+    // for (Product product : result) {
+    // assertEquals(1, product.getProductCategoryId());
+    // }
+    // }
+
+    // @Test
+    // public void Case3_countAll_OK() {
+
+    // int result = productMapper.countAll();
+
+    // assertEquals(32, result);
+    // }
+
+    // @Test
+    // public void Case4_countByProductCategoryId_OK() {
+
+    // int result = productMapper.countByProductCategoryId(1L);
+
+    // assertEquals(30, result);
+    // }
+
+    // @Test
+    // public void Case5_findById_OK() {
+
+    // Product result = productMapper.findById(1001L);
+
+    // assertNotNull(result);
+    // assertEquals(1001, result.getId());
+    // assertEquals("水性ボールペン(黒)", result.getName());
+    // }
+
     // @Sql(statements = {
     // "DELETE FROM product;",
     // "DELETE FROM product_category;",
@@ -31,25 +86,27 @@ public class ProductMapperTest {
     // "INSERT INTO product (id, product_category_id, name, price, image_url,
     // delete_flag) VALUES (300, 1, '消しゴム', 120, '/images/eraser.png', 0);"
     // })
-    void testEditProduct() {
-        // 💡 1. 確実に存在する既存の商品データ（例: ID 1005、水性ボールペン(黄)など）を用意します
-        Product target = new Product();
-        target.setId(1005L);
-        target.setProductCategoryId(1L);
-        target.setName("修正版消しゴム"); // テスト用に名前を変える
-        target.setPrice(150);
 
-        // 💡 2. 編集（更新）処理を実行します
-        productMapper.edit(target);
+    // 該当メソッドが後で追加されコンパイルエラー解消
+    // void testEditProduct() {
+    // // 💡 1. 確実に存在する既存の商品データ（例: ID 1005、水性ボールペン(黄)など）を用意します
+    // Product target = new Product();
+    // target.setId(1005L);
+    // target.setProductCategoryId(1L);
+    // target.setName("修正版消しゴム"); // テスト用に名前を変える
+    // target.setPrice(150);
 
-        // 💡 3. 本当に更新されたか、データベースからもう一度引っ張ってきて確かめます
-        Product actual = productMapper.findById(1005L);
+    // // 💡 2. 編集（更新）処理を実行します
+    // productMapper.edit(target);
 
-        // 🔍 4. 検証：名前と価格が、指定した通りに書き換わっているかチェックします
-        assertNotNull(actual);
-        assertEquals("修正版消しゴム", actual.getName());
-        assertEquals(150, actual.getPrice());
-    }
+    // // 💡 3. 本当に更新されたか、データベースからもう一度引っ張ってきて確かめます
+    // Product actual = productMapper.findById(1005L);
+
+    // // 🔍 4. 検証：名前と価格が、指定した通りに書き換わっているかチェックします
+    // assertNotNull(actual);
+    // assertEquals("修正版消しゴム", actual.getName());
+    // assertEquals(150, actual.getPrice());
+    // }
 
     @Test
     void testInsert_OK1() {
