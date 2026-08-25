@@ -63,15 +63,15 @@ public class SecurityConfig {
             if (isAccountEmpty || isPasswordEmpty) {
                 StringBuilder msg = new StringBuilder();
                 if (isAccountEmpty) {
-                    msg.append("アカウント名が未入力です。");
+                    msg.append("アカウント名を入力してください");
                 }
                 if (isPasswordEmpty) {
                     if (msg.length() > 0) msg.append(" ");
-                    msg.append("パスワードが未入力です。");
+                    msg.append("パスワードを入力してください");
                 }
                 errorMessage = msg.toString();
             } else {
-                errorMessage = "アカウント名またはパスワードが正しくありません。";
+                errorMessage = "アカウント名またはパスワードが正しくありません";
             }
 
             request.getSession().setAttribute("LOGIN_ERROR_MESSAGE", errorMessage);

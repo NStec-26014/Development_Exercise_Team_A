@@ -26,9 +26,7 @@ public class LoginController {
             if (errorMessage != null) {
                 model.addAttribute("errorMessage", errorMessage);
                 session.removeAttribute("LOGIN_ERROR_MESSAGE");
-            } else {
-                model.addAttribute("errorMessage", "ログインに失敗しました。");
-            }
+            } 
         }
         return "admin/login";
     }
