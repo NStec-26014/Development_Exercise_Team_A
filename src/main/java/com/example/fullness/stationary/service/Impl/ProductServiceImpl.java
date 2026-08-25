@@ -59,9 +59,4 @@ public class ProductServiceImpl implements ProductService {
 
         productMapper.updateStock(product.getId(), product.getQuantity());
     }
-
-    // 商品詳細取得
-    public Product findById(Long id) {
-        return productMapper.findById(id);
-    }
 }
