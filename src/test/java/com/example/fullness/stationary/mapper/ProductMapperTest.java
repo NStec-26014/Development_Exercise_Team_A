@@ -1,5 +1,7 @@
 package com.example.fullness.stationary.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -8,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
+import org.springframework.test.context.jdbc.Sql;
 
 import com.example.fullness.stationary.entity.Product;
 
@@ -20,6 +24,13 @@ public class ProductMapperTest {
     private ProductMapper productMapper;
 
     @Test
+    // @Sql(statements = {
+    // "DELETE FROM product;",
+    // "DELETE FROM product_category;",
+    // "INSERT INTO product_category (id, name) VALUES (1, '文房具');",
+    // "INSERT INTO product (id, product_category_id, name, price, image_url,
+    // delete_flag) VALUES (300, 1, '消しゴム', 120, '/images/eraser.png', 0);"
+    // })
     void testEditProduct() {
         // 💡 1. 確実に存在する既存の商品データ（例: ID 1005、水性ボールペン(黄)など）を用意します
         Product target = new Product();
@@ -39,6 +50,8 @@ public class ProductMapperTest {
         assertEquals("修正版消しゴム", actual.getName());
         assertEquals(150, actual.getPrice());
     }
+
+
 
     @Test
     void testInsert_OK1() {
@@ -70,4 +83,5 @@ public class ProductMapperTest {
         assertNull(actual.getImageUrl());
         assertEquals(0, actual.getDeleteFlag());
     }
+
 }
