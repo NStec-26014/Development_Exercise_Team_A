@@ -28,4 +28,9 @@ public class CategoryService {
         categoryMapper.insert(category);
     }
 
+    public boolean isDuplicate(String categoryName) {
+        Category existingCategory = categoryMapper.findByCategoryName(categoryName);
+        return existingCategory != null;
+    }
+
 }

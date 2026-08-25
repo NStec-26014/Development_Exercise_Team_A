@@ -14,4 +14,6 @@ public interface CategoryMapper {
     Category findById(Long id);
 
     int insert(Category category);
+
+    Category findByCategoryName(String categoryName);
 }
