@@ -10,7 +10,6 @@ public class ProductRegistForm {
     private Integer quantity; // 商品在庫数
     private int productCategoryId; // カテゴリID
     private String imageUrl; // 画像URL
-    // private int stock;
-    private String productCategoryName;
+    private String productCategoryName; // カテゴリ名
 
 }

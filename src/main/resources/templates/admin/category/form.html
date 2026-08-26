@@ -15,9 +15,10 @@
         <div class="admin-panel p-4 mx-auto" style="max-width: 480px;">
             <h1 class="text-center mb-4">商品カテゴリ登録(入力)</h1>
 
-            <!-- <ul class="alert alert-danger" th:if="${errorMessages}">
-                <li th:each="msg : ${errorMessages}" th:text="${msg}"></li>
-            </ul> -->
+            <ul class="alert alert-danger" th:if="${errorMessage != null and not #strings.isEmpty(errorMessage)}">
+                <li th:text="${errorMessage}"></li>
+            </ul>
+
 
             <form th:action="@{/admin/category/add}" th:object="${categoryInputForm}" method="post">
 

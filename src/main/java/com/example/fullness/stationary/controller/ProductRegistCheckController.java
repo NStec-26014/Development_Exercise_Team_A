@@ -47,7 +47,7 @@ public class ProductRegistCheckController {
         }
 
         model.addAttribute("productInputForm", form);
-        return "admin/add_confirm";
+        return "admin/product/add_confirm";
     }
 
     // 戻るボタン押下時

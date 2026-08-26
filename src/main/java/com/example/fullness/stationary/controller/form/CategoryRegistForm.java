@@ -1,4 +1,4 @@
-package com.example.fullness.stationary.form;
+package com.example.fullness.stationary.controller.form;
 
 import java.io.Serializable;
 
