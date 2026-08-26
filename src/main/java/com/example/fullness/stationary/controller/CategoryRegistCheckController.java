@@ -1,7 +1,5 @@
 package com.example.fullness.stationary.controller;
 
-import java.util.Locale.Category;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,13 +27,20 @@ public class CategoryRegistCheckController {
     public String showConfirmForm(
             @ModelAttribute("categoryInputForm") CategoryRegistForm form, Model model,
             RedirectAttributes redirectAttributes) {
-
+     
+      try{
         if (form == null || form.getCategoryName() == null || form.getCategoryName().isEmpty()) {
-            redirectAttributes.addFlashAttribute("errorMessage", "不正なアクセスです");
-            return "redirect:/admin/category/form";
+            redirectAttributes.addFlashAttribute("errorMessage", "入力情報が見つかりません。再度入力してください。");
+            return "redirect:/admin/category/add";
         }
         model.addAttribute("categoryInputForm", form);
         return "admin/category/confirm"; // セッションデータ不足の場合は入力画面へ、正常な場合は確認画面へ遷移
+    
+        }catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "登録処理に失敗しました。管理者に連絡してください。");
+            return "redirect:/admin/error";
+        }
     }
 
     // 戻るボタン押下時(確認画面から入力画面へ戻る)

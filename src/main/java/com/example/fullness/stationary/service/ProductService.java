@@ -15,14 +15,8 @@ public interface ProductService {
      * @param pageSize 1ページあたりの件数
      * @return 条件に一致する商品一覧
      */
-    List<Product> getProductsByProductCategoryWithPaging(Long id, int page, int pageSize);
+    List<Product> getProductsByProductCategoryWithPaging(Long id, int page, int pageSize);     
 
-    /**
-     * 指定カテゴリの商品総件数を取得する。
-     *
-     * @param id 検索対象カテゴリID
-     * @return 商品件数
-     */
     int countProductsByProductCategory(Long id);
 
     /**
@@ -31,6 +25,7 @@ public interface ProductService {
      * @param id 商品ID
      * @return 該当商品情報
      */
+    
     Product findById(Long id);
 
     List<ProductCategory> getAllCategories();

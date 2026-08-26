@@ -1,25 +1,27 @@
 package com.example.fullness.stationary.controller;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.fullness.stationary.config.TextEncoder;
 import com.example.fullness.stationary.controller.form.EmployeeAccountForm;
 import com.example.fullness.stationary.entity.Employee;
 import com.example.fullness.stationary.entity.EmployeeAccount;
-import com.example.fullness.stationary.service.impl.EmployeeAccountServiceImpl;
+import com.example.fullness.stationary.service.EmployeeAccountService;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 /**
  * コントローラークラス
@@ -29,7 +31,7 @@ import jakarta.servlet.http.HttpSession;
 public class EmployeeAccountRegisterController {
 
     @Autowired
-    EmployeeAccountServiceImpl employeeAccountServiceImpl;
+    EmployeeAccountService employeeAccountService;
 
     // @Autowired
     // EmployeeAccountForm employeeAccountForm;
@@ -50,7 +52,7 @@ public class EmployeeAccountRegisterController {
     @GetMapping("/form")
     public String employeeAccountShowInput(HttpSession session, Model model) {
         // model.addAttribute("form", new EmployeeAccountForm(null, null, null));
-        model.addAttribute("employees", new ArrayList<Employee>(employeeAccountServiceImpl.showAllByNameIsNull()));
+        model.addAttribute("employees", new ArrayList<Employee>(employeeAccountService.showAllByNameIsNull()));
         return "accountForm";
     }
 
@@ -65,25 +67,20 @@ public class EmployeeAccountRegisterController {
 
     @PostMapping("/validate")
     public String employeeAccountValidateInput(
-            @Validated @ModelAttribute EmployeeAccountForm employeeAccountForm,
-            BindingResult bindingResult, HttpSession session, Model model) {
-        boolean canRegisterAccountName = employeeAccountServiceImpl
+            @Valid @ModelAttribute EmployeeAccountForm employeeAccountForm,
+            BindingResult bindingResult, HttpSession session, RedirectAttributes ra, Model model) {
+        boolean canRegisterAccountName = employeeAccountService
                 .canRegisterAccountName(employeeAccountForm.getAccountName());
-        System.out.println(canRegisterAccountName);
+        String accountErrorMessege = "このアカウント名は既に使用されています";
+        List<String> errorMessages = new ArrayList<String>();
         // 入力チェック
-        // if (bindingResult.hasErrors()) {
-        // // ra.addFlashAttribute(employeeAccountForm);
-        // // ra.addFlashAttribute(BindingResult.MODEL_KEY_PREFIX +
-        // // Conventions.getVariableName(employeeAccountForm),
-        // // bindingResult);
-        // // return "redirect:/admin/account/form";
-        // return "redirect:/admin/account/form";
-        // }
-
-        // 重複チェック
-        // エラーメッセージを表示させる
-        if (canRegisterAccountName == false) {
-            // model.addAttribute("message", "このアカウント名は既に使用されています");
+        if (bindingResult.hasErrors()) {
+            if (canRegisterAccountName == false) {
+                bindingResult.rejectValue("accountName", "duplicate", accountErrorMessege);
+            }
+            errorMessages = bindingResult.getFieldErrors().stream().map(FieldError::getDefaultMessage)
+                    .toList();
+            ra.addFlashAttribute("errorMessages", errorMessages);
             return "redirect:/admin/account/form";
         } else {
 
@@ -102,11 +99,15 @@ public class EmployeeAccountRegisterController {
     @GetMapping("/confirm")
     public String accountConfirm(@ModelAttribute EmployeeAccountForm employeeAccountForm, HttpSession session,
             Model model) {
+        // セッションデータがない場合は入力画面にリダイレクトする
+        if (session.getAttribute("employeeAccountForm") == null) {
+            return "redirect:/admin/account/form";
+        }
         // formインスタンスに情報を詰め込む
         EmployeeAccountForm form = (EmployeeAccountForm) session.getAttribute("employeeAccountForm");
 
         // 社員IDから社員名を取得してformインスタンスに詰め込む
-        String employeeName = employeeAccountServiceImpl
+        String employeeName = employeeAccountService
                 .showEmployeeNameByEmployeeId(form.getEmployeeId());
         form.setEmployeeName(employeeName);
 
@@ -140,19 +141,23 @@ public class EmployeeAccountRegisterController {
         // パスワードをハッシュ化してpasswordにセットする
         employeeAccount.setPassword(textEncoder.toHash((String) session.getAttribute("password")));
         // DBにアカウントを登録し。成功したらtrueを返す
-        boolean success = employeeAccountServiceImpl
+        boolean success = employeeAccountService
                 .registerEmployeeAccount(employeeAccount);
         if (success == true) {
             // DBに登録が成功したら"/admin/account/complete"にリダイレクトする
             return "redirect:/admin/account/complete";
         } else {
             // 例外発生でエラーを返す
-            return "/error"; // 仮のURL
+            return "/admin/error"; // 仮のURL
         }
     }
 
     @GetMapping("/complete")
     public String accountRegister(HttpSession session, Model model) {
+        // セッションデータがない場合はメニュー画面にリダイレクトする
+        if (session.getAttribute("employeeName") == null || session.getAttribute("accountName") == null) {
+            return "redirect:/admin";
+        }
         // DBに登録した内容を取得する
         model.addAttribute("employeeName", session.getAttribute("employeeName"));
         model.addAttribute("accountName", session.getAttribute("accountName"));
