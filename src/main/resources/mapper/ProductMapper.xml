@@ -119,7 +119,7 @@
     ]]>
     </update>
 
-     <select id="findAllWithPaging" resultMap="ProductResult">
+     <!-- <select id="findAllWithPaging" resultMap="ProductResult">
         <![CDATA[
         SELECT p.id, p.product_category_id, p.name, p.price, p.image_url, p.delete_flag, s.quantity
         FROM product p
@@ -136,6 +136,6 @@
         FROM product 
         WHERE delete_flag = 0
         ]]>
-    </select>
+    </select> -->
 
 </mapper>

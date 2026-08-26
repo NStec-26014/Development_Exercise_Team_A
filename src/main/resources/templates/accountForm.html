@@ -14,12 +14,15 @@
         <div class="admin-panel p-4 mx-auto" style="max-width: 560px;">
             <h1 class="text-center mb-4">アカウント登録(入力)</h1>
 
+            <ul class="alert alert-danger" th:if="${errorMessages}">
+                <li th:each="msg : ${errorMessages}" th:text="${msg}"></li>
+            </ul>
+
             <form th:action="@{/admin/account/validate}" th:object="${employeeAcountForm}" method="post">
 
                 <ul class="alert alert-danger" th:if="${errorMessages}">
                     <li th:each="msg : ${errorMessages}" th:text="${msg}"></li>
                 </ul>
-
                 <div class="mb-3 row">
                     <label class="col-sm-4 col-form-label">社員名</label>
                     <div class="col-sm-8">
