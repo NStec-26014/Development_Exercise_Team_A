@@ -14,28 +14,28 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class LoginController {
-    
-       @GetMapping("/admin/login")
-    public String login(@RequestParam(value = "error", required = false) String error, 
-                        HttpSession session, 
-                        Model model) {
-                        
+
+    @GetMapping("/admin/login")
+    public String login(@RequestParam(value = "error", required = false) String error,
+            HttpSession session,
+            Model model) {
+
         if (error != null) {
             String errorMessage = (String) session.getAttribute("LOGIN_ERROR_MESSAGE");
-            
+
             if (errorMessage != null) {
                 model.addAttribute("errorMessage", errorMessage);
                 session.removeAttribute("LOGIN_ERROR_MESSAGE");
-            } 
+            }
         }
+        // 追加
+        session.setAttribute("loggedIn", true);
         return "admin/login";
     }
 
- 
     @GetMapping("/admin/error")
-    public String showError(Model model){
+    public String showError(Model model) {
         model.addAttribute("errorMessage", "システムエラーが発生しました。管理者に連絡してください");
         return "admin/error";
     }
 }
-
