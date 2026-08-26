@@ -2,7 +2,6 @@ package com.example.fullness.stationary.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -50,10 +49,17 @@ public class EmployeeAccountRegisterController {
      * DBからアカウント名がない社員の名前とIDを取得
      */
     @GetMapping("/form")
-    public String employeeAccountShowInput(HttpSession session, Model model) {
-        // model.addAttribute("form", new EmployeeAccountForm(null, null, null));
-        model.addAttribute("employees", new ArrayList<Employee>(employeeAccountService.showAllByNameIsNull()));
-        return "accountForm";
+    public String employeeAccountShowInput(HttpSession session, RedirectAttributes ra, Model model) {
+        List<String> errorMessages = new ArrayList<String>();
+        try {
+            model.addAttribute("employees", new ArrayList<Employee>(employeeAccountService.showAllByNameIsNull()));
+            return "accountForm";
+        } catch (Exception e) {
+            String errorMessage = "社員情報の取得に失敗しました";
+            errorMessages.add(errorMessage);
+            ra.addFlashAttribute("errorMessages", errorMessages);
+            return "accountForm";
+        }
     }
 
     /**
@@ -69,28 +75,35 @@ public class EmployeeAccountRegisterController {
     public String employeeAccountValidateInput(
             @Valid @ModelAttribute EmployeeAccountForm employeeAccountForm,
             BindingResult bindingResult, HttpSession session, RedirectAttributes ra, Model model) {
-        boolean canRegisterAccountName = employeeAccountService
-                .canRegisterAccountName(employeeAccountForm.getAccountName());
         String accountErrorMessege = "このアカウント名は既に使用されています";
         List<String> errorMessages = new ArrayList<String>();
-        // 入力チェック
-        if (bindingResult.hasErrors()) {
-            if (canRegisterAccountName == false) {
-                bindingResult.rejectValue("accountName", "duplicate", accountErrorMessege);
+        try {
+            boolean canRegisterAccountName = employeeAccountService
+                    .canRegisterAccountName(employeeAccountForm.getAccountName());
+            // 入力チェック
+            if (bindingResult.hasErrors()) {
+                if (canRegisterAccountName == false) {
+                    bindingResult.rejectValue("accountName", "duplicate", accountErrorMessege);
+                }
+                errorMessages = bindingResult.getFieldErrors().stream().map(FieldError::getDefaultMessage)
+                        .toList();
+                ra.addFlashAttribute("errorMessages", errorMessages);
+                return "redirect:/admin/account/form";
+            } else {
+
+                // リダイレクト先に入力データを渡すために保存
+                // model.addAttribute("employeeAccountForm", Form);
+                session.setAttribute("employeeAccountForm", employeeAccountForm);
+                session.setAttribute("employeeId", employeeAccountForm.getEmployeeId());
+                session.setAttribute("accountName", employeeAccountForm.getAccountName());
+                session.setAttribute("password", employeeAccountForm.getPassword());
+                return "redirect:/admin/account/confirm";
             }
-            errorMessages = bindingResult.getFieldErrors().stream().map(FieldError::getDefaultMessage)
-                    .toList();
+        } catch (Exception e) {
+            String errorMessage = "社員情報の取得に失敗しました";
+            errorMessages.add(errorMessage);
             ra.addFlashAttribute("errorMessages", errorMessages);
             return "redirect:/admin/account/form";
-        } else {
-
-            // リダイレクト先に入力データを渡すために保存
-            // model.addAttribute("employeeAccountForm", Form);
-            session.setAttribute("employeeAccountForm", employeeAccountForm);
-            session.setAttribute("employeeId", employeeAccountForm.getEmployeeId());
-            session.setAttribute("accountName", employeeAccountForm.getAccountName());
-            session.setAttribute("password", employeeAccountForm.getPassword());
-            return "redirect:/admin/account/confirm";
         }
     }
 
@@ -132,7 +145,8 @@ public class EmployeeAccountRegisterController {
 
     // *アカウントをDBに登録するメソッド */
     @GetMapping("/register")
-    public String accountRegisterConfirm(HttpSession session, Model model) {
+    public String accountRegisterConfirm(HttpSession session, RedirectAttributes ra, Model model) {
+        List<String> errorMessages = new ArrayList<String>();
         EmployeeAccount employeeAccount = new EmployeeAccount();
 
         TextEncoder textEncoder = new TextEncoder();
@@ -147,8 +161,11 @@ public class EmployeeAccountRegisterController {
             // DBに登録が成功したら"/admin/account/complete"にリダイレクトする
             return "redirect:/admin/account/complete";
         } else {
+            String errorMessage = "登録処理に失敗しました。管理者に連絡してください。";
+            errorMessages.add(errorMessage);
+            ra.addFlashAttribute("errorMessages", errorMessages);
             // 例外発生でエラーを返す
-            return "/admin/error"; // 仮のURL
+            return "/accountConfirm";
         }
     }
 
