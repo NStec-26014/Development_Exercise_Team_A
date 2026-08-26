@@ -16,37 +16,43 @@ import com.example.fullness.stationary.controller.form.ProductRegistForm;
 @RequestMapping("/admin/product")
 @SessionAttributes("productInputForm")
 public class ProductRegistCompleteController {
+
     // 完了画面表示処理
     @GetMapping("/add/complete")
     public String complete(
             @ModelAttribute("productInputForm") ProductRegistForm form, Model model, SessionStatus sessionStatus) {
-        if (form == null) {
+        if (form == null || form.getName() == null || form.getName().isEmpty()) {
             return "redirect:/admin/product/add";
         }
         model.addAttribute("productInputForm", form);
-        sessionStatus.setComplete();
+
         return "admin/product/add_complete";
     }
+
+    @ModelAttribute("productInputForm")
+        public ProductRegistForm setUpProductRegistForm() {
+        return new ProductRegistForm();
+       }
 
     // 入力画面へ戻る処理
     @GetMapping("/add/back-to-input")
     public String backToInput(SessionStatus sessionStatus) {
         sessionStatus.setComplete();
-        return "redeirect:/admin/product/add";
+        return "redirect:/admin/product/add";
     }
 
     // 商品検索画面へ戻る処理
     @GetMapping("/add/back-to-search")
     public String backToSearch(SessionStatus sessionStatus) {
         sessionStatus.setComplete();
-        return "redeirect:/admin/search";
+        return "redirect:/admin/search";
     }
 
     // メニュー画面へ戻る処理
     @GetMapping("/add/back-to-menu")
     public String backToMenu(SessionStatus sessionStatus) {
         sessionStatus.setComplete();
-        return "redeirect:/admin";
+        return "redirect:/admin";
     }
 
 }

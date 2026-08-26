@@ -32,15 +32,9 @@ public class CategoryRegistCheckController {
             redirectAttributes.addFlashAttribute("errorMessage", "入力情報が見つかりません。再度入力してください。");
             return "redirect:/admin/category/add";
         }
-        try {
-            model.addAttribute("categoryInputForm", form);
-            return "admin/category/confirm";
+        model.addAttribute("categoryInputForm", form);
+        return "admin/category/confirm";
 
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage",
-                    "登録処理に失敗しました。管理者に連絡してください。");
-            return "redirect:/admin/error";
-        }
     }
 
     // 戻るボタン押下時(確認画面から入力画面へ戻る)
@@ -66,9 +60,10 @@ public class CategoryRegistCheckController {
             return "redirect:/admin/category/add/complete";
         } catch (Exception e) {
 
-            model.addAttribute("errorMessage", "登録に失敗しました");
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "登録処理に失敗しました。管理者に連絡してください。");
 
-            return "admin/category/confirm"; // 登録成功時は完了画面へリダイレクトし、例外発生時は確認画面へ戻る
+            return "redirect:/admin/error";
         }
 
     }
