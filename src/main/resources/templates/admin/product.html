@@ -64,28 +64,42 @@
 
         <!-- ページネーション -->
         <nav th:if="${totalPages > 1}">
+            <!-- ページネーション全体の塊をここから丸ごと差し替えてください -->
             <ul class="pagination justify-content-center">
 
-                <!-- 最初へ -->
+                <!-- ① 最初へ -->
                 <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
                     <a class="page-link"
                         th:href="@{/admin/product(category=${selectedProductCategory}, page=1)}">最初へ</a>
                 </li>
 
-                <!-- ページ番号 -->
+                <!-- ② 前へ（現在のページ - 1 へジャンプ） -->
+                <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                    <a class="page-link"
+                        th:href="@{/admin/product(category=${selectedProductCategory}, page=${currentPage - 1})}">前へ</a>
+                </li>
+
+                <!-- ③ ページ番号 (1 2 3 4 のループ) -->
                 <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}"
                     th:classappend="${i == currentPage} ? 'active'">
                     <a class="page-link" th:href="@{/admin/product(category=${selectedProductCategory}, page=${i})}"
                         th:text="${i}"></a>
                 </li>
 
-                <!-- 最後へ -->
-                <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                <!-- ④ 次へ（現在のページ + 1 へジャンプ。文字が前へになっていたバグを修正） -->
+                <li class="page-item" th:classappend="${currentPage >= totalPages} ? 'disabled'">
+                    <a class="page-link"
+                        th:href="@{/admin/product(category=${selectedProductCategory}, page=${currentPage + 1})}">次へ</a>
+                </li>
+
+                <!-- ⑤ 最後へ -->
+                <li class="page-item" th:classappend="${currentPage >= totalPages} ? 'disabled'">
                     <a class="page-link"
                         th:href="@{/admin/product(category=${selectedProductCategory}, page=${totalPages})}">最後へ</a>
                 </li>
 
             </ul>
+
         </nav>
 
     </div>

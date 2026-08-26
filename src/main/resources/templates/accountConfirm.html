@@ -9,7 +9,9 @@
 
 <body>
     <div th:replace="~{admin/fragments/layout :: header}"></div>
-
+    <ul class="alert alert-danger" th:if="${errorMessages}">
+        <li th:each="msg : ${errorMessages}" th:text="${msg}"></li>
+    </ul>
     <main class="container">
         <div class="admin-panel p-4 mx-auto" style="max-width: 560px;">
             <h1 class="text-center mb-4">アカウント登録(確認)</h1>
