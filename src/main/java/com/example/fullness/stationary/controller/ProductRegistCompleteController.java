@@ -25,7 +25,7 @@ public class ProductRegistCompleteController {
         }
         model.addAttribute("productInputForm", form);
         sessionStatus.setComplete();
-        return "admin/add_complete";
+        return "admin/product/add_complete";
     }
 
     // 入力画面へ戻る処理
