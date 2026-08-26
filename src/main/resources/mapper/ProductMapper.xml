@@ -119,23 +119,4 @@
     ]]>
     </update>
 
-     <select id="findAllWithPaging" resultMap="ProductResult">
-        <![CDATA[
-        SELECT p.id, p.product_category_id, p.name, p.price, p.image_url, p.delete_flag, s.quantity
-        FROM product p
-        LEFT JOIN product_stock s ON p.id = s.product_id
-        WHERE p.delete_flag = 0
-        ORDER BY p.id
-        LIMIT #{pageSize} OFFSET #{offset}
-        ]]>
-    </select>
-
-    <select id="countAll" resultType="int">
-    <![CDATA[
-        SELECT COUNT(*) 
-        FROM product 
-        WHERE delete_flag = 0
-        ]]>
-    </select>
-
 </mapper>

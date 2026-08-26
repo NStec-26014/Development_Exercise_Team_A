@@ -51,12 +51,21 @@ public class EmployeeAccountRegisterController {
     @GetMapping("/form")
     public String employeeAccountShowInput(HttpSession session, RedirectAttributes ra, Model model) {
         List<String> errorMessages = new ArrayList<String>();
+        String errorMessage = "アカウント登録可能な社員が存在しません";
         try {
-            model.addAttribute("employees", new ArrayList<Employee>(employeeAccountService.showAllByNameIsNull()));
-            return "accountForm";
+            if (employeeAccountService.showAllByNameIsNull().isEmpty()) {
+                errorMessages.add(errorMessage);
+                ra.addFlashAttribute("errorMessages", errorMessages);
+                System.out.println(errorMessages);
+                model.addAttribute("employees", new ArrayList<Employee>(employeeAccountService.showAllByNameIsNull()));
+                return "accountForm";
+            } else {
+                model.addAttribute("employees", new ArrayList<Employee>(employeeAccountService.showAllByNameIsNull()));
+                return "accountForm";
+            }
         } catch (Exception e) {
-            String errorMessage = "社員情報の取得に失敗しました";
-            errorMessages.add(errorMessage);
+            String errorMessage2 = "社員情報の取得に失敗しました";
+            errorMessages.add(errorMessage2);
             ra.addFlashAttribute("errorMessages", errorMessages);
             return "accountForm";
         }

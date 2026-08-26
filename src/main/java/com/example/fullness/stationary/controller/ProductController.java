@@ -90,7 +90,7 @@ public class ProductController {
         // 2. 商品検索
         List<Product> products = productService.getProductsByProductCategoryWithPaging(category, page, pageSize);
 
-        int totalCount = productServiceImpl.countProductsByProductCategory(category);
+        int totalCount = productService.countProductsByProductCategory(category);
 
         // 【安全ガード】もし商品総数が0件なら、最大ページ数は強制的に「1」にする
         int totalPages = (totalCount == 0) ? 1 : (int) Math.ceil((double) totalCount / pageSize);
