@@ -13,7 +13,7 @@
     <div class="admin-panel p-4 mx-auto" style="max-width: 480px;">
         <h1 class="text-center mb-4">ログイン</h1>
 
-        <div class="alert alert-danger" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+        <div class="alert alert-danger" th:if="${errorMessage}" th:utext="${#strings.replace(errorMessage, '\\n', '<br/>')}"></div>
 
         <form th:action="@{/admin/login}" method="post">
             <div class="mb-3">

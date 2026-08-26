@@ -84,18 +84,7 @@ public class SecurityConfig {
             boolean isAccountEmpty = (accountName == null || accountName.trim().isEmpty());
             boolean isPasswordEmpty = (password == null || password.isEmpty());
 
-            if (exception instanceof InternalAuthenticationServiceException) {
-                response.sendRedirect(request.getContextPath() + "/admin/error");
-                return;
-            }
-            if (accountName != null) {
-                request.getSession().setAttribute("LOGIN_ACCOUNT_NAME", accountName);
-            } else {
-                request.getSession().removeAttribute("LOGIN_ACCOUNT_NAME");
-            }
-
-            String errorMessage = "";
-
+            // まず空欄チェックを優先し、未入力ならログイン画面へ戻す
             if (isAccountEmpty || isPasswordEmpty) {
                 StringBuilder msg = new StringBuilder();
                 if (isAccountEmpty) {
@@ -105,13 +94,32 @@ public class SecurityConfig {
                     if (msg.length() > 0) msg.append(" ");
                     msg.append("パスワードを入力してください");
                 }
-                errorMessage = msg.toString();
-            } else {
-                errorMessage = "アカウント名またはパスワードが正しくありません";
+
+                if (accountName != null) {
+                    request.getSession().setAttribute("LOGIN_ACCOUNT_NAME", accountName);
+                } else {
+                    request.getSession().removeAttribute("LOGIN_ACCOUNT_NAME");
+                }
+
+                request.getSession().setAttribute("LOGIN_ERROR_MESSAGE", msg.toString());
+                response.sendRedirect(request.getContextPath() + "/admin/login?error");
+                return;
             }
 
-            request.getSession().setAttribute("LOGIN_ERROR_MESSAGE", errorMessage);
+            // 空欄でなければ例外種別で振り分け（重大エラーは /admin/error へ）
+            if (exception instanceof InternalAuthenticationServiceException) {
+                response.sendRedirect(request.getContextPath() + "/admin/error");
+                return;
+            }
 
+            if (accountName != null) {
+                request.getSession().setAttribute("LOGIN_ACCOUNT_NAME", accountName);
+            } else {
+                request.getSession().removeAttribute("LOGIN_ACCOUNT_NAME");
+            }
+
+            String errorMessage = "アカウント名またはパスワードが正しくありません";
+            request.getSession().setAttribute("LOGIN_ERROR_MESSAGE", errorMessage);
             response.sendRedirect(request.getContextPath() + "/admin/login?error");
         };
     }
