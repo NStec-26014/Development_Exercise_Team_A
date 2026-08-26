@@ -31,11 +31,13 @@ public interface ProductCategoryMapper {
      */
     ProductCategory findById(Long id);
 
-    // /**
-    // * カテゴリを新規登録する。
-    // *
-    // * @param category 登録対象のカテゴリ情報
-    // * @return 登録件数
-    // */
-    // int insert(ProductCategory category);
+    /**
+     * カテゴリを新規登録する。
+     *
+     * @param category 登録対象のカテゴリ情報
+     * @return 登録件数
+     */
+    int insert(ProductCategory category);
+
+    ProductCategory findByCategoryName(String categoryName);
 }

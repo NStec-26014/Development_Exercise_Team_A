@@ -1,24 +1,32 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
 
-<!-- Layout fragments used by admin pages (header, footer) -->
+<body>
 
-<div th:fragment="header">
-    <header class="admin-header py-3 px-4 mb-4">
-        <div class="d-flex justify-content-between align-items-center">
-            <h2 class="admin-title mb-0">フルネス文具 管理画面</h2>
-            <nav class="d-flex gap-3 align-items-center">
-                <a class="nav-link" href="/admin/product">商品情報メンテナンス</a>
-                <a class="nav-link" href="/admin/category/add">商品カテゴリ登録</a>
-                <a class="nav-link" href="/admin/order/search">購入履歴検索</a>
-                <a class="nav-link" href="/admin">ログアウト</a>
+    <header th:fragment="header" class="admin-header py-3 mb-4">
+        <div class="container">
+            <div class="text-center mb-2">
+                <a th:href="@{/admin}" class="admin-title fs-4">フルネス文具 管理画面</a>
+            </div>
+            <nav class="d-flex justify-content-center align-items-center gap-4 flex-wrap" th:if="${loggedIn}">
+                <a th:href="@{/admin/product}" class="nav-link">商品情報メンテナンス</a>
+                <a th:href="@{/admin/category/add}" class="nav-link">商品カテゴリ登録</a>
+                <a th:href="@{/admin/order/search}" class="nav-link">購入履歴検索</a>
+                <a th:href="@{/admin/account/form}" class="nav-link">アカウント登録</a>
+                <form th:action="@{/admin/logout}" method="post" class="mb-0">
+                    <button type="submit" class="btn btn-fs btn-sm">ログアウト</button>
+                </form>
+            </nav>
+            <nav class="d-flex justify-content-center" th:unless="${loggedIn}">
+                <a th:href="@{/admin/login}" class="btn btn-fs btn-sm">ログイン</a>
             </nav>
         </div>
     </header>
-</div>
 
-<div th:fragment="footer">
-    <footer class="admin-footer mt-4 py-3 px-4">
-        <div>フッター: 管理画面の補足表示</div>
+    <footer th:fragment="footer" class="admin-footer py-3 mt-5 text-center">
+        Fullness Stationery
     </footer>
-</div>
+
+</body>
+
+</html>

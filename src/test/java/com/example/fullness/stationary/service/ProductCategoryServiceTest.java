@@ -1,37 +1,34 @@
 package com.example.fullness.stationary.service;
 
+import static org.mockito.Mockito.verify;
+
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.example.fullness.stationary.entity.ProductCategory;
+import com.example.fullness.stationary.mapper.ProductCategoryMapper;
+import com.example.fullness.stationary.service.impl.ProductCategoryServiceImpl;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-@SpringBootTest
-@Transactional
+//CategoryServiceの単体テストを行うクラス
+@ExtendWith(MockitoExtension.class)
 public class ProductCategoryServiceTest {
 
-    @Autowired
-    private ProductCategoryService productCategoryService;
+    @InjectMocks
+    private ProductCategoryServiceImpl categoryService;
+    @Mock
+    private ProductCategoryMapper categoryMapper;
 
+    // Serviceの登録メソッドを呼び出すときにMapperのinsertメソッドが正しく実行されることを検証
     @Test
-    public void case1_getAllCategories_OK() {
+    void saveCategory_shouldDelegateToCategoryMapper() {
 
-        List<ProductCategory> result = productCategoryService.getAllCategories();
+        ProductCategory category = new ProductCategory("雑貨");
 
-        assertTrue(result.size() >= 2);
-        long bunguCount = result.stream()
-                .filter(c -> c.getName().equals("文房具"))
-                .count();
-        assertTrue(bunguCount > 0);
+        categoryService.saveProductCategory(category);
 
-        long otherCount = result.stream()
-                .filter(c -> c.getName().equals("その他"))
-                .count();
-        assertTrue(otherCount > 0);
+        verify(categoryMapper).insert(category);
     }
 }

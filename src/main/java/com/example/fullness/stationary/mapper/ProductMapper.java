@@ -38,7 +38,7 @@ public interface ProductMapper {
          * @param pageSize   1ページあたりの件数
          * @return 該当カテゴリの商品一覧
          */
-        List<Product> findByCategoryIdWithPaging(@Param("categoryId") Long categoryId,
+        List<Product> findByProductCategoryIdWithPaging(@Param("categoryId") Long categoryId,
                         @Param("offset") int offset,
                         @Param("pageSize") int pageSize);
 
@@ -55,7 +55,7 @@ public interface ProductMapper {
          * @param categoryId カテゴリID
          * @return 対象カテゴリの商品件数
          */
-        int countByCategoryId(@Param("categoryId") Long categoryId);
+        int countByProductCategoryId(@Param("categoryId") Long categoryId);
 
         /**
          * 商品IDをキーに単一の商品を取得する。
@@ -65,17 +65,15 @@ public interface ProductMapper {
          */
         Product findById(Long id);
 
-        // /**
-        // * 商品を新規登録する。
-        // *
-        // * @param product 登録対象の商品情報
-        // */
-        // void insert(Product product);
+        List<Product> findAll();
 
-        // /**
-        // * 商品IDをもとに商品を削除する。
-        // *
-        // * @param id 削除対象の商品ID
-        // */
-        // void deleteById(Long id);
+        List<Product> findByProductCategoryId(Long categoryId);
+
+        int insert(Product product);
+
+        int edit(Product product);
+
+        int deleteById(Long id);
+
+        int updateStock(@Param("id") Long id, @Param("quantity") Integer quantity);
 }

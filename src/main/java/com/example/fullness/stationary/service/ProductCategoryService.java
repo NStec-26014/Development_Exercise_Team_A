@@ -20,10 +20,9 @@ public interface ProductCategoryService {
      */
     List<ProductCategory> getAllCategories();
 
-    // /**
-    // * カテゴリを登録する。
-    // *
-    // * @param category 登録対象のカテゴリ情報
-    // */
-    // void saveCategory(ProductCategory category);
+    ProductCategory findById(Long id);
+
+    void saveProductCategory(ProductCategory category);
+
+    boolean isDuplicate(String categoryName);
 }

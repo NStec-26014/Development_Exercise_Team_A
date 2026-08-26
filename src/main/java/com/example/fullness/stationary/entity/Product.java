@@ -23,10 +23,8 @@ public class Product implements Serializable {
     private String imageUrl; // 画像URL
     private Integer deleteFlag; // 0有効, 1削除済み
 
-    /**
-     * デフォルトコンストラクタ。
-     * MyBatis がデータをマッピングする際に利用される。
-     */
+    private Integer quantity; // 在庫数（例: 100）
+
     public Product() {
     }
 
@@ -57,12 +55,13 @@ public class Product implements Serializable {
      * @param deleteFlag        削除状態 0:有効, 1:削除済み
      */
     public Product(Long id, Long productCategoryId, String name, Integer price,
-            String imageUrl, Integer deleteFlag) {
+            String imageUrl, Integer deleteFlag, Integer quantity) {
         this.id = id;
         this.productCategoryId = productCategoryId;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
         this.deleteFlag = deleteFlag;
+        this.quantity = quantity;
     }
 }

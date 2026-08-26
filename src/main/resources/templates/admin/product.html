@@ -20,7 +20,7 @@
                 <select name="category" class="form-select w-auto">
                     <option value="0">すべて</option>
                     <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"
-                        th:selected="${selectedCategory != null and selectedCategory == cat.id}">
+                        th:selected="${selectedProductCategory != null and selectedProductCategory == cat.id}">
                     </option>
                 </select>
                 <button type="submit" class="btn btn-fs-solid">カテゴリ検索</button>
@@ -65,20 +65,21 @@
 
                 <!-- 最初へ -->
                 <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
-                    <a class="page-link" th:href="@{/admin/product(category=${selectedCategory}, page=1)}">最初へ</a>
+                    <a class="page-link"
+                        th:href="@{/admin/product(category=${selectedProductCategory}, page=1)}">最初へ</a>
                 </li>
 
                 <!-- ページ番号 -->
                 <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}"
                     th:classappend="${i == currentPage} ? 'active'">
-                    <a class="page-link" th:href="@{/admin/product(category=${selectedCategory}, page=${i})}"
+                    <a class="page-link" th:href="@{/admin/product(category=${selectedProductCategory}, page=${i})}"
                         th:text="${i}"></a>
                 </li>
 
                 <!-- 最後へ -->
                 <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
                     <a class="page-link"
-                        th:href="@{/admin/product(category=${selectedCategory}, page=${totalPages})}">最後へ</a>
+                        th:href="@{/admin/product(category=${selectedProductCategory}, page=${totalPages})}">最後へ</a>
                 </li>
 
             </ul>

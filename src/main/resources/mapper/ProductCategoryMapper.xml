@@ -2,24 +2,39 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.fullness.stationary.mapper.ProductCategoryMapper">
 
-    <resultMap id="CategoryResult" type="com.example.fullness.stationary.entity.ProductCategory">
+    <resultMap id="ProductCategoryResult" type="com.example.fullness.stationary.entity.ProductCategory">
         <id property="id" column="id" />
         <result property="name" column="name" />
     </resultMap>
 
-    <select id="findAll" resultMap="CategoryResult">
-     <![CDATA[ 
+    <select id="findAll" resultMap="ProductCategoryResult">
+     <![CDATA[
         SELECT id, name
         FROM product_category
         ORDER BY id
         ]]>
     </select>
 
-    <select id="findById" parameterType="long" resultMap="CategoryResult">
-     <![CDATA[ 
+    <select id="findById" parameterType="long" resultMap="ProductCategoryResult">
+     <![CDATA[
         SELECT id, name
         FROM product_category
         WHERE id = #{id}
+        ]]>
+    </select>
+
+    <insert id="insert" parameterType="com.example.fullness.stationary.entity.ProductCategory" useGeneratedKeys="true" keyProperty="id">
+        <![CDATA[
+        INSERT INTO product_category (name)
+        VALUES (#{name})
+        ]]>
+    </insert>
+
+    <select id="findByCategoryName" resultMap="ProductCategoryResult">
+      <![CDATA[
+        SELECT id, name
+        FROM product_category
+        WHERE name = #{categoryName}
         ]]>
     </select>
 

@@ -1,40 +1,35 @@
 package com.example.fullness.stationary.mapper;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.example.fullness.stationary.entity.ProductCategory;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-
+//CategoryMapperの単体テストを行うクラス
 @SpringBootTest
-@Transactional
 public class ProductCategoryMapperTest {
 
     @Autowired
-    private ProductCategoryMapper productCategoryMapper;
+    private ProductCategoryMapper categoryMapper;
 
+    // 新規カテゴリを登録し、自動採番されたIDでデータが正しく取得できることを検証
     @Test
-    public void Case1_findAll_OK() {
+    void testInsert_OK1() {
 
-        List<ProductCategory> result = productCategoryMapper.findAll();
+        ProductCategory category = new ProductCategory();
+        category.setName("雑貨");
 
-        assertTrue(result.size() >= 2);
-        assertTrue(result.stream().anyMatch(c -> c.getName().equals("文房具")));
-        assertTrue(result.stream().anyMatch(c -> c.getName().equals("その他")));
+        categoryMapper.insert(category);
+
+        ProductCategory actual = categoryMapper.findById(category.getId());
+
+        assertNotNull(actual);
+        assertEquals(category.getId(), actual.getId());
+        assertEquals("雑貨", actual.getName());
     }
 
-    @Test
-    public void Case2_findById_OK() {
-
-        ProductCategory result = productCategoryMapper.findById(1L);
-
-        assertNotNull(result);
-        assertEquals(1, result.getId());
-        assertEquals("文房具", result.getName());
-    }
 }
