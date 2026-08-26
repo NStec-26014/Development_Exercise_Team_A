@@ -28,7 +28,6 @@ public class LoginController {
 
     @GetMapping("/admin/error")
     public String showError(Model model) {
-        model.addAttribute("errorMessage", "システムエラーが発生しました。管理者に連絡してください");
         return "admin/error";
     }
 }
