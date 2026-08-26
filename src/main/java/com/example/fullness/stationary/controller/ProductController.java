@@ -63,11 +63,6 @@ public class ProductController {
         return new ProductEditForm();
     }
 
-    @GetMapping("/")
-    public String home() {
-        return "redirect:/admin/product";
-    }
-
     /**
      * 商品一覧画面を表示する。
      *
@@ -103,11 +98,9 @@ public class ProductController {
         // 3. Modelにデータを詰める
         model.addAttribute("categories", categories);
         model.addAttribute("products", products);
+        model.addAttribute("selectedCategory", category);
         model.addAttribute("selectedProductCategory", category);
         model.addAttribute("totalPages", totalPages);
-        model.addAttribute("currentPage", page);
-
-        // 4. テンプレート名を返す
         return "admin/product"; // → templates/admin/product.html
     }
 

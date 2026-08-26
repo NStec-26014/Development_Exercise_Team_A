@@ -28,8 +28,6 @@ public class LoginController {
                 session.removeAttribute("LOGIN_ERROR_MESSAGE");
             }
         }
-        // 追加
-        session.setAttribute("loggedIn", true);
         return "admin/login";
     }
 
