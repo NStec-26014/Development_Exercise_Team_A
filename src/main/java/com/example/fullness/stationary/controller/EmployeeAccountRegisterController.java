@@ -152,6 +152,10 @@ public class EmployeeAccountRegisterController {
 
     @GetMapping("/complete")
     public String accountRegister(HttpSession session, Model model) {
+        // セッションデータがない場合はメニュー画面にリダイレクトする
+        if (session.getAttribute("employeeName") == null || session.getAttribute("accountName") == null) {
+            return "redirect:/admin";
+        }
         // DBに登録した内容を取得する
         model.addAttribute("employeeName", session.getAttribute("employeeName"));
         model.addAttribute("accountName", session.getAttribute("accountName"));
