@@ -41,21 +41,28 @@ public class CategoryRegistInputController {
             @Validated @ModelAttribute("categoryInputForm") CategoryRegistForm form,
             BindingResult result, RedirectAttributes redirectAttributes) {
 
-        // バリデーションチェック
-        if (result.hasErrors()) {
-            return "admin/category/form";
-        }
+        try {
+            // バリデーションチェック
+            if (result.hasErrors()) {
+                return "admin/category/form";
+            }
 
-        // 例外：カテゴリ名重複
-        if (categoryService.isDuplicate(form.getCategoryName())) {
-            result.rejectValue("categoryName", "error.duplicate",
-                    "入力されたカテゴリ名は既に登録されています");
-            return "admin/category/form";
-        }
+            // 例外：カテゴリ名重複
+            if (categoryService.isDuplicate(form.getCategoryName())) {
+                result.rejectValue("categoryName", "error.duplicate",
+                        "入力されたカテゴリ名は既に登録されています");
+                return "admin/category/form";
+            }
 
-        // エラーがない場合、確認画面へ遷移
-        redirectAttributes.addFlashAttribute("categoryInputForm", form);
-        return "redirect:/admin/category/add/confirm";
+            // エラーがない場合、確認画面へ遷移
+            redirectAttributes.addFlashAttribute("categoryInputForm", form);
+            return "redirect:/admin/category/add/confirm";
+
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "登録処理に失敗しました。管理者に連絡してください。");
+            return "redirect:/admin/error";
+        }
     }
 
     // キャンセルリンク押下時（メニューへ戻る）
