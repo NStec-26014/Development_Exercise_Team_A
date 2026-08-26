@@ -1,11 +1,11 @@
 package com.example.fullness.stationary.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.InternalAuthenticationServiceException; 
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.crypto.password.MessageDigestPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -56,6 +56,11 @@ public class SecurityConfig {
             if (exception instanceof InternalAuthenticationServiceException) {
                 response.sendRedirect(request.getContextPath() + "/admin/error");
                 return;
+            }
+            if (accountName != null) {
+                request.getSession().setAttribute("LOGIN_ACCOUNT_NAME", accountName);
+            } else {
+                request.getSession().removeAttribute("LOGIN_ACCOUNT_NAME");
             }
 
             String errorMessage = "";
