@@ -4,7 +4,6 @@ import com.example.fullness.stationary.service.LoginFailureService;
 
 import java.io.IOException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -28,13 +27,3 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         super.onAuthenticationSuccess(request, response, authentication);
     }
 }
-
-// @Autowired
-    // private LoginFailureService failureService;
-
-    // @Override
-    // public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-    //     // ログイン成功時にカウントをリセット
-    //     failureService.resetFailureCount(authentication.getName());
-
-    // }
