@@ -28,6 +28,9 @@
             </form>
 
             <!-- 商品一覧 -->
+            <div class="alert alert-danger text-start mx-auto mb-4" style="max-width: 960px;" th:if="${errorMessage}">
+                <span th:text="${errorMessage}">ここにメッセージが表示されます</span>
+            </div>
             <table class="table table-bordered table-striped text-center align-middle">
                 <thead class="table-dark">
                     <tr>
