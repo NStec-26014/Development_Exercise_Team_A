@@ -18,16 +18,9 @@
             <ul class="alert alert-danger" th:if="${errorMessages}">
                 <li th:each="msg : ${errorMessages}" th:text="${msg}"></li>
 
-
-                <!-- <div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}" style="background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 20px; border-radius: 4px; margin-bottom: 20px;">
-        <h1 class="text-center mb-4">商品修正(入力)</h1>
-        <ul style="margin-bottom: 0; padding-left: 20px;">
-            <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li> -->
-
-
             </ul>
 
-            <form th:action="@{/admin/product/edit}" th:object="${form}" method="post" enctype="multipart/form-data">
+            <form th:action="@{/admin/product/edit/confirm}" th:object="${form}" method="post" enctype="multipart/form-data">
                 <!-- 💡 画面には見えないけれど、修正・更新に絶対に不可欠な「商品ID」と「現在の画像URL」を隠し持たせます -->
                 <input type="hidden" th:field="*{id}" />
                 <input type="hidden" th:field="*{imageUrl}" />
@@ -46,8 +39,6 @@
                     <div class="col-sm-8">
                         <!-- 💡 th:field="*{price}" に書き換えました -->
                         <input type="text" th:field="*{price}" class="form-control">
-                        <div th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="text-danger small mt-1">
-                        </div>
                     </div>
                 </div>
                 <div class="mb-3 row">
@@ -55,8 +46,6 @@
                     <div class="col-sm-8">
                         <!-- 💡 th:field="*{quantity}" に書き換えました -->
                         <input type="text" th:field="*{quantity}" class="form-control">
-                        <div th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}"
-                            class="text-danger small mt-1"></div>
                     </div>
                     <div class="mb-3 row">
                         <label class="col-sm-4 col-form-label">商品カテゴリ</label>

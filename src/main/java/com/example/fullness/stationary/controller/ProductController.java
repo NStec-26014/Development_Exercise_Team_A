@@ -1,5 +1,6 @@
 package com.example.fullness.stationary.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -178,21 +179,22 @@ public class ProductController {
         return "admin/product/edit_confirm";
     }
 
-    // 💡 入力画面の form で指定したURL「/admin/product/edit/confirm」をここで待ち受けます
     @PostMapping("/edit/confirm")
     public String editConfirm(
             @ModelAttribute("form") ProductEditForm form,
-            @RequestParam(name = "action", required = false) String action, // 💡HTMLの name="action" をここで受け取ります
+            BindingResult bindingResult,
+            @RequestParam(name = "action", required = false) String action,
             RedirectAttributes redirectAttributes,
             Model model) {
-        // 1. 💡 もし「戻る」ボタン（value="back"）が押されていた場合
+
+        // 💡確認画面（edit_confirm.html）側で「戻る」が押されて飛んできた場合の処理
         if ("back".equals(action)) {
             model.addAttribute("categories", productService.getAllCategories());
-            model.addAttribute("form", form); // 入力内容をそのままキープ
-            return "admin/product/edit_form"; // ➔ 入力画面（edit_form）へ戻します！
+            model.addAttribute("form", form);
+            return "admin/product/edit_form"; // 入力画面（edit_form.html）をそのまま表示
         }
 
-        // 2. 💡 もし「完了」ボタン（value="complete"）が押されていた場合（保存処理）
+        // 💡確認画面側で「完了」が押されて飛んできた場合の処理（DB保存）
         else if ("complete".equals(action)) {
             Product product = new Product();
             product.setId(form.getId());
@@ -203,17 +205,59 @@ public class ProductController {
             product.setImageUrl(form.getImageUrl());
             product.setQuantity(form.getQuantity());
 
-            // データベースを更新します
             productService.editProduct(product);
 
-            // 💡 完了画面の ${productName} に修正後の商品名を届けます！
             redirectAttributes.addFlashAttribute("productName", form.getName());
-
-            // 保存が終わったら、完了画面へ自動で戻します（リダイレクト）
             return "redirect:/admin/product/edit/complete";
-
         }
-        return "redirect:/admin/product";
+
+        // この時点で、単価に「q」が入っていると bindingResult にエラーが自動記録されています
+        if (bindingResult.hasErrors()) {
+
+            List<String> errorMessages = new ArrayList<>();
+
+            // 💡 単価に文字エラーがあれば、仕様書通りのメッセージを追加
+            if (bindingResult.hasFieldErrors("price")) {
+                errorMessages.add("正しい価格形式で入力してください");
+            }
+            // 💡 在庫数に文字エラーがあれば、仕様書通りのメッセージを追加
+            if (bindingResult.hasFieldErrors("quantity")) {
+                errorMessages.add("正しい在庫数形式で入力してください");
+            }
+
+            // ★【ここが最重要！】HTMLが認識できる名前（errorMessages）でモデルに詰め込みます
+            model.addAttribute("errorMessages", errorMessages);
+
+            // 💡 画面を動かすために必要な「カテゴリ一覧」と「フォーム情報」も一緒に渡して戻します
+            model.addAttribute("categories", productService.getAllCategories());
+            model.addAttribute("form", form); // ← ★これがないと、入力した「p」が消えたり画面がバグる原因になります
+
+            return "admin/product/edit_form";
+        }
+
+        // 💡通常の遷移（入力画面から最初にデータが送られてきたとき）
+        // 入力内容（form）を、次のGETリクエストへ安全に引き渡します
+        redirectAttributes.addFlashAttribute("form", form);
+
+        // ★ここでブラウザに「URLを /edit/confirm に変えて開き直して！」と命令（リダイレクト）します
+        return "redirect:/admin/product/edit/confirm";
+    }
+
+    @GetMapping("/edit/confirm")
+    public String showConfirmPage(
+            @ModelAttribute("form") ProductEditForm form, // ①からリダイレクトされたデータが自動で入ります
+            Model model) {
+
+        // 万が一、直リンクなどでフォームデータが空っぽの場合は一覧画面へ戻す
+        if (form.getId() == null) {
+            return "redirect:/admin/product";
+        }
+
+        // 確認画面でカテゴリ名を表示するために、カテゴリ一覧をModelに積む
+        model.addAttribute("categories", productService.getAllCategories());
+
+        // 確認画面のHTMLテンプレート名（edit_confirm.html）を返す
+        return "admin/product/edit_confirm";
     }
 
     /**
@@ -231,11 +275,19 @@ public class ProductController {
     public String showEditForm(
             @PathVariable(value = "id") Long id, // 修正対象の商品ID
             @RequestParam(name = "category", required = false, defaultValue = "0") Long category,
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            RedirectAttributes redirectAttributes,
             Model model) {
 
         Product product = productService.findById(id);
-        if (product == null) {
-            return "redirect:/admin/product?category=" + category;
+        if (product == null || product.getDeleteFlag() == 1) {
+
+            // 仕様書通りのエラーメッセージ[MSG036]をフラッシュ属性にセット
+            redirectAttributes.addFlashAttribute("errorMessage", "指定された商品は存在しません");
+                
+            // ➔ 一覧画面[BP006]（/admin/product）へリダイレクトして戻す！
+            return "redirect:/admin/product";
+            
         }
 
         ProductEditForm form = new ProductEditForm();
