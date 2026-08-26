@@ -28,7 +28,7 @@ public class ProductRegistValidator implements Validator {
 
     private void validateName(ProductRegistForm form, Errors errors) {
         String name = form.getName();
-        if (name == null) {
+        if (name == null || name.trim().isEmpty()) {
             errors.rejectValue("name", "", "商品名を入力してください");
             return;
         }
@@ -39,6 +39,11 @@ public class ProductRegistValidator implements Validator {
     }
 
     private void validatePrice(ProductRegistForm form, Errors errors) {
+
+        if (errors.hasFieldErrors("price")) {
+            errors.rejectValue("price", "", "正しい価格形式で入力してください");
+            return;
+        }
         Integer price = form.getPrice();
         if (price == null) {
             errors.rejectValue("price", "", "価格を入力してください");

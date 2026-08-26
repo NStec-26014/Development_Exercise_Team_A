@@ -23,6 +23,12 @@ public class LoginController {
                 session.removeAttribute("LOGIN_ERROR_MESSAGE");
             }
         }
+
+        String accountName = (String) session.getAttribute("LOGIN_ACCOUNT_NAME");
+        if (accountName != null) {
+            model.addAttribute("accountName", accountName);
+            session.removeAttribute("LOGIN_ACCOUNT_NAME");
+        }
         return "admin/login";
     }
 

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -50,22 +51,22 @@ public class ProductRegistInputController {
 
             model.addAttribute("errorMessage", "カテゴリ情報の取得に失敗しました");
         } // 商品カテゴリデータ取得エラー
-        return "admin/add_form";
+        return "admin/product/add_form";
     }
 
     // 完了ボタン押下時の処理
     @PostMapping("/add")
     public String submitAddForm(
-            @ModelAttribute("productInputForm") ProductRegistForm form,
+            @Validated @ModelAttribute("productInputForm") ProductRegistForm form,
             BindingResult result,
             Model model, RedirectAttributes redirectAttributes) {
 
-        productResistValidator.validate(form, result); // 入力チェックを実行
+        // productResistValidator.validate(form, result); // 入力チェックを実行
 
         if (result.hasErrors()) {
             model.addAttribute("categories", productCategoryService.getAllCategories());
 
-            return "admin/add_form"; // エラーなら入力画面に戻す
+            return "admin/product/add_form"; // エラーなら入力画面に戻す
         }
 
         redirectAttributes.addFlashAttribute("productInputForm", form);
