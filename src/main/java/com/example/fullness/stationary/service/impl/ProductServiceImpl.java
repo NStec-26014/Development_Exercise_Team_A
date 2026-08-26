@@ -38,11 +38,11 @@ public class ProductServiceImpl implements ProductService {
      * それ以外の場合は指定カテゴリの商品だけを検索する。ページ番号から OFFSET を計算し、
      * MyBatis の SQL へ渡して対象データを取得する。
      *
-     * @param id       検索対象カテゴリID。全件表示時は {@code null} または {@code 0}
-     * @param page     表示ページ番号（1始まり）
-     * @param pageSize 1ページあたりの表示件数
-     * @return 条件に合致する商品一覧
+     * @p
+     
+
      */
+
     @Override
     public List<Product> getProductsByProductCategoryWithPaging(Long id, int page, int pageSize) {
         int offset = (page - 1) * pageSize;
@@ -56,15 +56,15 @@ public class ProductServiceImpl implements ProductService {
 
     /**
      * 指定カテゴリに対する商品件数を取得する。
-     *
-     * <p>
-     * カテゴリが未指定または {@code 0} の場合は全商品の件数を返し、
-     * 指定カテゴリがある場合はそのカテゴリの商品数のみを返す。
+     
+
+       * カテゴリが未指定また定カテゴリがある場合はそのカテゴリの商品数のみを返す。
      * 画面のページ数計算や一覧表示時の件数判定に利用される。
      *
      * @param id 商品カテゴリID。全件集計時は {@code null} または {@code 0}
      * @return 指定条件に一致する商品の総件数
      */
+
     @Override
     public int countProductsByProductCategory(Long id) {
         if (id == null || id == 0) {

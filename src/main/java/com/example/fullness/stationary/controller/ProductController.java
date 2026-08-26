@@ -17,8 +17,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.fullness.stationary.entity.ProductCategory;
 import com.example.fullness.stationary.controller.form.ProductEditForm;
 import com.example.fullness.stationary.entity.Product;
-import com.example.fullness.stationary.service.impl.ProductCategoryServiceImpl;
-import com.example.fullness.stationary.service.impl.ProductServiceImpl;
 import com.example.fullness.stationary.validator.ProductEditValidator;
 
 import jakarta.servlet.http.HttpSession;
@@ -47,13 +45,10 @@ import com.example.fullness.stationary.service.ProductService;
 public class ProductController {
 
     @Autowired
-    private ProductServiceImpl productServiceImpl;
+    private ProductService productService;
 
     @Autowired
     private ProductCategoryService productCategoryService;
-
-    @Autowired
-    private ProductCategoryServiceImpl categoryServiceImpl;
 
     @Autowired
     ProductEditValidator productEditValidator;
@@ -91,9 +86,9 @@ public class ProductController {
         List<ProductCategory> categories = productCategoryService.getAllCategories();
 
         // 2. 商品検索
-        List<Product> products = productServiceImpl.getProductsByProductCategoryWithPaging(category, page, pageSize);
+        List<Product> products = productService.getProductsByProductCategoryWithPaging(category, page, pageSize);
 
-        int totalCount = productServiceImpl.countProductsByProductCategory(category);
+        int totalCount = productService.countProductsByProductCategory(category);
         int totalPages = (int) Math.ceil((double) totalCount / pageSize);
         // 3. Modelにデータを詰める
         model.addAttribute("categories", categories);
@@ -109,13 +104,13 @@ public class ProductController {
 
     public String ShowProductDeleteConfirm(@PathVariable("id") Long id, HttpSession session, Model model) {
         // Product型の情報をidを基に取得して追加する
-        model.addAttribute("product", productServiceImpl.findById(id));
-        String categoryName = categoryServiceImpl
-                .findById(productServiceImpl.findById(id).getProductCategoryId())
+        model.addAttribute("product", productService.findById(id));
+        String categoryName = productCategoryService
+                .findById(productService.findById(id).getProductCategoryId())
                 .getName();
         model.addAttribute("categoryName", categoryName);
         session.setAttribute("deleteId", id);
-        session.setAttribute("deleteName", productServiceImpl.findById(id).getName());
+        session.setAttribute("deleteName", productService.findById(id).getName());
 
         // 確認画面に遷移する
         return ("admin/product/delete_confirm");
@@ -125,7 +120,7 @@ public class ProductController {
     @PostMapping("/delete/doDelete")
     public String doDeleteProduct(HttpSession session, Model model) {
         // 削除が完了（true）が返ってきたときに完了画面に遷移する
-        boolean success = productServiceImpl.deleteProduct((Long) session.getAttribute("deleteId"));
+        boolean success = productService.deleteProduct((Long) session.getAttribute("deleteId"));
         if (success) {
             return ("redirect:/admin/product/delete/complete");
         }
@@ -154,8 +149,8 @@ public class ProductController {
         productEditValidator.validate(form, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            List<ProductCategory> categories = productServiceImpl.getAllCategories();
-            List<Product> products = productServiceImpl.searchProducts(category);
+            List<ProductCategory> categories = productService.getAllCategories();
+            List<Product> products = productService.searchProducts(category);
             model.addAttribute("categories", categories);
             model.addAttribute("products", products);
             model.addAttribute("selectedProductCategory", category);
@@ -164,7 +159,7 @@ public class ProductController {
 
         // ⭕ ここから下に2行追加します！
         // 確認画面でもカテゴリの一覧情報が必要なので、データベースから取得してModelに詰めます
-        List<ProductCategory> categories = productServiceImpl.getAllCategories();
+        List<ProductCategory> categories = productService.getAllCategories();
         model.addAttribute("categories", categories);
 
         Product product = new Product();
@@ -177,7 +172,7 @@ public class ProductController {
 
         product.setDeleteFlag(0);
 
-        productServiceImpl.editProduct(product);
+        productService.editProduct(product);
 
         model.addAttribute("form", form);
         return "admin/product/edit_confirm";
@@ -192,7 +187,7 @@ public class ProductController {
             Model model) {
         // 1. 💡 もし「戻る」ボタン（value="back"）が押されていた場合
         if ("back".equals(action)) {
-            model.addAttribute("categories", productServiceImpl.getAllCategories());
+            model.addAttribute("categories", productService.getAllCategories());
             model.addAttribute("form", form); // 入力内容をそのままキープ
             return "admin/product/edit_form"; // ➔ 入力画面（edit_form）へ戻します！
         }
@@ -209,7 +204,7 @@ public class ProductController {
             product.setQuantity(form.getQuantity());
 
             // データベースを更新します
-            productServiceImpl.editProduct(product);
+            productService.editProduct(product);
 
             // 💡 完了画面の ${productName} に修正後の商品名を届けます！
             redirectAttributes.addFlashAttribute("productName", form.getName());
@@ -238,7 +233,7 @@ public class ProductController {
             @RequestParam(name = "category", required = false, defaultValue = "0") Long category,
             Model model) {
 
-        Product product = productServiceImpl.findById(id);
+        Product product = productService.findById(id);
         if (product == null) {
             return "redirect:/admin/product?category=" + category;
         }
@@ -253,8 +248,8 @@ public class ProductController {
 
         model.addAttribute("form", form);
 
-        List<ProductCategory> categories = productServiceImpl.getAllCategories();
-        List<Product> products = productServiceImpl.searchProducts(category);
+        List<ProductCategory> categories = productService.getAllCategories();
+        List<Product> products = productService.searchProducts(category);
         model.addAttribute("categories", categories);
         model.addAttribute("products", products);
         model.addAttribute("selectedProductCategory", category);
