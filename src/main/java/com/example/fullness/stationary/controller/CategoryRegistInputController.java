@@ -45,12 +45,17 @@ public class CategoryRegistInputController {
         if (result.hasErrors()) {
             return "admin/category/form";
         }
-
-        // 例外：カテゴリ名重複
-        if (categoryService.isDuplicate(form.getCategoryName())) {
-            result.rejectValue("categoryName", "error.duplicate",
-                    "入力されたカテゴリ名は既に登録されています");
-            return "admin/category/form";
+        try {
+            // 例外：カテゴリ名重複
+            if (categoryService.isDuplicate(form.getCategoryName())) {
+                result.rejectValue("categoryName", "error.duplicate",
+                        "入力されたカテゴリ名は既に登録されています");
+                return "admin/category/form";
+            }
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "登録処理に失敗しました。管理者に連絡してください。");
+            return "redirect:/admin/error";
         }
 
         // エラーがない場合、確認画面へ遷移

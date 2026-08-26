@@ -45,5 +45,4 @@ public class ProductCategory implements Serializable {
         this.id = id;
         this.name = name;
     }
-
 }
