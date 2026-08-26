@@ -75,7 +75,7 @@ public class ProductController {
      * @param model    表示用のモデルオブジェクト。カテゴリ一覧、商品一覧、選択中カテゴリ、総ページ数を格納する
      * @return 商品一覧画面を表す Thymeleaf URL {@code admin/product}
      */
-    @GetMapping("")
+    @GetMapping("/")
     public String showProductList(
             @RequestParam(name = "category", required = false, defaultValue = "0") Long category,
             @RequestParam(name = "page", defaultValue = "1") int page,
