@@ -8,25 +8,22 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.fullness.stationary.entity.ProductCategory;
 import com.example.fullness.stationary.controller.form.ProductRegistForm;
 import com.example.fullness.stationary.entity.Product;
-import com.example.fullness.stationary.mapper.ProductCategoryMapper;
-import com.example.fullness.stationary.service.impl.ProductCategoryServiceImpl;
-import com.example.fullness.stationary.service.impl.ProductServiceImpl;
+import com.example.fullness.stationary.service.ProductCategoryService;
+import com.example.fullness.stationary.service.ProductService;
 
 @Controller
 @RequestMapping("/admin/product")
 @SessionAttributes("productInputForm")
 public class ProductRegistCheckController {
     @Autowired
-    private ProductServiceImpl productService;
+    private ProductService productService;
     @Autowired
-    private ProductCategoryServiceImpl categoryServiceImpl;
+    private ProductCategoryService productCategoryService;
 
     // 確認画面表示処理
     @GetMapping("/add/confirm")
@@ -42,7 +39,7 @@ public class ProductRegistCheckController {
         Integer id = form.getProductCategoryId();
 
         if (id != null) {
-            ProductCategory category = categoryServiceImpl.findById(id.longValue());
+            ProductCategory category = productCategoryService.findById(id.longValue());
 
             if (category != null) {
                 form.setProductCategoryName(category.getName());

@@ -11,13 +11,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.fullness.stationary.config.TextEncoder;
 import com.example.fullness.stationary.controller.form.EmployeeAccountForm;
 import com.example.fullness.stationary.entity.Employee;
 import com.example.fullness.stationary.entity.EmployeeAccount;
-import com.example.fullness.stationary.service.impl.EmployeeAccountServiceImpl;
+import com.example.fullness.stationary.service.EmployeeAccountService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -29,7 +28,7 @@ import jakarta.servlet.http.HttpSession;
 public class EmployeeAccountRegisterController {
 
     @Autowired
-    EmployeeAccountServiceImpl employeeAccountServiceImpl;
+    EmployeeAccountService employeeAccountService;
 
     // @Autowired
     // EmployeeAccountForm employeeAccountForm;
@@ -50,7 +49,7 @@ public class EmployeeAccountRegisterController {
     @GetMapping("/form")
     public String employeeAccountShowInput(HttpSession session, Model model) {
         // model.addAttribute("form", new EmployeeAccountForm(null, null, null));
-        model.addAttribute("employees", new ArrayList<Employee>(employeeAccountServiceImpl.showAllByNameIsNull()));
+        model.addAttribute("employees", new ArrayList<Employee>(employeeAccountService.showAllByNameIsNull()));
         return "accountForm";
     }
 
@@ -67,7 +66,7 @@ public class EmployeeAccountRegisterController {
     public String employeeAccountValidateInput(
             @Validated @ModelAttribute EmployeeAccountForm employeeAccountForm,
             BindingResult bindingResult, HttpSession session, Model model) {
-        boolean canRegisterAccountName = employeeAccountServiceImpl
+        boolean canRegisterAccountName = employeeAccountService
                 .canRegisterAccountName(employeeAccountForm.getAccountName());
         System.out.println(canRegisterAccountName);
         // 入力チェック
@@ -106,7 +105,7 @@ public class EmployeeAccountRegisterController {
         EmployeeAccountForm form = (EmployeeAccountForm) session.getAttribute("employeeAccountForm");
 
         // 社員IDから社員名を取得してformインスタンスに詰め込む
-        String employeeName = employeeAccountServiceImpl
+        String employeeName = employeeAccountService
                 .showEmployeeNameByEmployeeId(form.getEmployeeId());
         form.setEmployeeName(employeeName);
 
@@ -140,7 +139,7 @@ public class EmployeeAccountRegisterController {
         // パスワードをハッシュ化してpasswordにセットする
         employeeAccount.setPassword(textEncoder.toHash((String) session.getAttribute("password")));
         // DBにアカウントを登録し。成功したらtrueを返す
-        boolean success = employeeAccountServiceImpl
+        boolean success = employeeAccountService
                 .registerEmployeeAccount(employeeAccount);
         if (success == true) {
             // DBに登録が成功したら"/admin/account/complete"にリダイレクトする
