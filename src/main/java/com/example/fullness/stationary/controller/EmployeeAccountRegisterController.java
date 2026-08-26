@@ -101,6 +101,10 @@ public class EmployeeAccountRegisterController {
     @GetMapping("/confirm")
     public String accountConfirm(@ModelAttribute EmployeeAccountForm employeeAccountForm, HttpSession session,
             Model model) {
+        // セッションデータがない場合は入力画面にリダイレクトする
+        if (session.getAttribute("employeeAccountForm") == null) {
+            return "redirect:/admin/account/form";
+        }
         // formインスタンスに情報を詰め込む
         EmployeeAccountForm form = (EmployeeAccountForm) session.getAttribute("employeeAccountForm");
 
