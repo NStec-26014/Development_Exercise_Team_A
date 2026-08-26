@@ -186,78 +186,121 @@ public class ProductController {
             @RequestParam(name = "action", required = false) String action,
             RedirectAttributes redirectAttributes,
             Model model) {
+        try {
 
-        // 💡確認画面（edit_confirm.html）側で「戻る」が押されて飛んできた場合の処理
-        if ("back".equals(action)) {
-            model.addAttribute("categories", productService.getAllCategories());
-            model.addAttribute("form", form);
-            return "admin/product/edit_form"; // 入力画面（edit_form.html）をそのまま表示
-        }
-
-        // 💡確認画面側で「完了」が押されて飛んできた場合の処理（DB保存）
-        else if ("complete".equals(action)) {
-            Product product = new Product();
-            product.setId(form.getId());
-            product.setName(form.getName());
-            product.setPrice(form.getPrice());
-            product.setDeleteFlag(0);
-            product.setProductCategoryId(form.getProductCategoryId());
-            product.setImageUrl(form.getImageUrl());
-            product.setQuantity(form.getQuantity());
-
-            productService.editProduct(product);
-
-            redirectAttributes.addFlashAttribute("productName", form.getName());
-            return "redirect:/admin/product/edit/complete";
-        }
-
-        // この時点で、単価に「q」が入っていると bindingResult にエラーが自動記録されています
-        if (bindingResult.hasErrors()) {
-
-            List<String> errorMessages = new ArrayList<>();
-
-            // 💡 単価に文字エラーがあれば、仕様書通りのメッセージを追加
-            if (bindingResult.hasFieldErrors("price")) {
-                errorMessages.add("正しい価格形式で入力してください");
-            }
-            // 💡 在庫数に文字エラーがあれば、仕様書通りのメッセージを追加
-            if (bindingResult.hasFieldErrors("quantity")) {
-                errorMessages.add("正しい在庫数形式で入力してください");
+            // 💡確認画面（edit_confirm.html）側で「戻る」が押されて飛んできた場合の処理
+            if ("back".equals(action)) {
+                model.addAttribute("categories", productService.getAllCategories());
+                model.addAttribute("form", form);
+                // return "admin/product/edit_form"; // 入力画面（edit_form.html）をそのまま表示
+                return "redirect:/admin/product/edit/" + form.getId();
             }
 
-            // ★【ここが最重要！】HTMLが認識できる名前（errorMessages）でモデルに詰め込みます
-            model.addAttribute("errorMessages", errorMessages);
+            // 💡確認画面側で「完了」が押されて飛んできた場合の処理（DB保存）
+            else if ("complete".equals(action)) {
 
-            // 💡 画面を動かすために必要な「カテゴリ一覧」と「フォーム情報」も一緒に渡して戻します
-            model.addAttribute("categories", productService.getAllCategories());
-            model.addAttribute("form", form); // ← ★これがないと、入力した「p」が消えたり画面がバグる原因になります
+                try {
 
-            return "admin/product/edit_form";
+                    Product product = new Product();
+                    product.setId(form.getId());
+                    product.setName(form.getName());
+                    product.setPrice(form.getPrice());
+                    product.setDeleteFlag(0);
+                    product.setProductCategoryId(form.getProductCategoryId());
+                    product.setImageUrl(form.getImageUrl());
+                    product.setQuantity(form.getQuantity());
+
+                    productService.editProduct(product);
+
+                    redirectAttributes.addFlashAttribute("productName", form.getName());
+                    return "redirect:/admin/product/edit/complete";
+
+                } catch (Exception ex) {
+                    // ========================================================
+                    // ★【ここを修正】完了ボタン時のDB切断を個別キャッチ！
+                    // ========================================================
+                    // フラッシュ属性に仕様書通りのメッセージを込めます
+                    redirectAttributes.addFlashAttribute("errorMessage", "登録処理に失敗しました。管理者に連絡してください。");
+                    redirectAttributes.addFlashAttribute("form", form);
+
+                    // ➔ エラー画面ではなく、確認画面のURL（GET）にリダイレクトしてその場に留めます！
+                    return "redirect:/admin/product/edit/confirm";
+                }
+            }
+
+            // この時点で、単価に「q」が入っていると bindingResult にエラーが自動記録されています
+            if (bindingResult.hasErrors()) {
+
+                List<String> errorMessages = new ArrayList<>();
+
+                // 💡 単価に文字エラーがあれば、仕様書通りのメッセージを追加
+                if (bindingResult.hasFieldErrors("price")) {
+                    errorMessages.add("正しい価格形式で入力してください");
+                }
+                // 💡 在庫数に文字エラーがあれば、仕様書通りのメッセージを追加
+                if (bindingResult.hasFieldErrors("quantity")) {
+                    errorMessages.add("正しい在庫数形式で入力してください");
+                }
+
+                // ★【ここが最重要！】HTMLが認識できる名前（errorMessages）でモデルに詰め込みます
+                model.addAttribute("errorMessages", errorMessages);
+
+                // 💡 画面を動かすために必要な「カテゴリ一覧」と「フォーム情報」も一緒に渡して戻します
+                model.addAttribute("categories", productService.getAllCategories());
+                model.addAttribute("form", form); // ← ★これがないと、入力した「p」が消えたり画面がバグる原因になります
+
+                return "admin/product/edit_form";
+            }
+
+            productService.getAllCategories();
+            // 💡通常の遷移（入力画面から最初にデータが送られてきたとき）
+            // 入力内容（form）を、次のGETリクエストへ安全に引き渡します
+            redirectAttributes.addFlashAttribute("form", form);
+
+            // ★ここでブラウザに「URLを /edit/confirm に変えて開き直して！」と命令（リダイレクト）します
+            return "redirect:/admin/product/edit/confirm";
+        } catch (Exception e) {
+            // ========================================================
+            // 【catchブロック】入力画面から飛んできた後のDB切断をここで一括キャッチ！
+            // ========================================================
+
+            // 1. 仕様書通りのエラーメッセージ[MSG030]をセット
+            model.addAttribute("errorMessage", "データの取得に失敗しました");
+
+            // 2. エラー画面[BP000]へ遷移させる
+            return "admin/error";
         }
-
-        // 💡通常の遷移（入力画面から最初にデータが送られてきたとき）
-        // 入力内容（form）を、次のGETリクエストへ安全に引き渡します
-        redirectAttributes.addFlashAttribute("form", form);
-
-        // ★ここでブラウザに「URLを /edit/confirm に変えて開き直して！」と命令（リダイレクト）します
-        return "redirect:/admin/product/edit/confirm";
     }
 
     @GetMapping("/edit/confirm")
     public String showConfirmPage(
             @ModelAttribute("form") ProductEditForm form, // ①からリダイレクトされたデータが自動で入ります
+            jakarta.servlet.http.HttpServletRequest request,
             Model model) {
 
-        // 万が一、直リンクなどでフォームデータが空っぽの場合は一覧画面へ戻す
-        if (form.getId() == null) {
-            return "redirect:/admin/product";
+        java.util.Map<String, ?> flashMap = org.springframework.web.servlet.support.RequestContextUtils
+                .getInputFlashMap(request);
+        if (flashMap != null && flashMap.containsKey("errorMessage")) {
+            // 1. 本命のエラーメッセージを画面に渡す
+            model.addAttribute("errorMessage", flashMap.get("errorMessage"));
+
+            // 2. ★【超簡単】ダミーデータを作らず、既存の「form」をそのまま使い回して画面に渡します！
+            model.addAttribute("categories", form);
+
+            return "admin/product/edit_confirm";
         }
 
-        // 確認画面でカテゴリ名を表示するために、カテゴリ一覧をModelに積む
-        model.addAttribute("categories", productService.getAllCategories());
-
-        // 確認画面のHTMLテンプレート名（edit_confirm.html）を返す
-        return "admin/product/edit_confirm";
+        try {
+            if (form.getId() == null) {
+                return "redirect:/admin/product";
+            }
+            // ★ここでDBからカテゴリ一覧を取得する際、DBが切断されているとエラーになります！
+            model.addAttribute("categories", productService.getAllCategories());
+            return "admin/product/edit_confirm";
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "データの取得に失敗しました");
+            return "admin/error";
+        }
     }
 
     /**
@@ -279,39 +322,58 @@ public class ProductController {
             RedirectAttributes redirectAttributes,
             Model model) {
 
-        Product product = productService.findById(id);
-        if (product == null || product.getDeleteFlag() == 1) {
+        try {
+            // ★【追加・確認】「戻る」ボタンからリダイレクトされて、すでにフォーム（入力内容）が届いている場合
+            if (model.containsAttribute("form")) {
+                model.addAttribute("categories", productService.getAllCategories());
+                return "admin/product/edit_form"; // そのまま入力画面を表示（URLからはすでにconfirmが消えています）
+            }
 
-            // 仕様書通りのエラーメッセージ[MSG036]をフラッシュ属性にセット
-            redirectAttributes.addFlashAttribute("errorMessage", "指定された商品は存在しません");
-                
-            // ➔ 一覧画面[BP006]（/admin/product）へリダイレクトして戻す！
-            return "redirect:/admin/product";
-            
+            Product product = productService.findById(id);
+            if (product == null || product.getDeleteFlag() == 1) {
+
+                // 仕様書通りのエラーメッセージ[MSG036]をフラッシュ属性にセット
+                redirectAttributes.addFlashAttribute("errorMessage", "指定された商品は存在しません");
+
+                // ➔ 一覧画面[BP006]（/admin/product）へリダイレクトして戻す！
+                return "redirect:/admin/product";
+
+            }
+
+            ProductEditForm form = new ProductEditForm();
+            form.setId(product.getId());
+            form.setName(product.getName());
+            form.setPrice(product.getPrice());
+            form.setQuantity(product.getQuantity());
+            form.setProductCategoryId(product.getProductCategoryId());
+            form.setImageUrl(product.getImageUrl());
+
+            model.addAttribute("form", form);
+
+            List<ProductCategory> categories = productService.getAllCategories();
+            List<Product> products = productService.searchProducts(category);
+            model.addAttribute("categories", categories);
+            model.addAttribute("products", products);
+            model.addAttribute("selectedProductCategory", category);
+
+            return "admin/product/edit_form";
+
+        } catch (Exception e) { // 👈 tryを閉じる波括弧 ②
+            model.addAttribute("errorMessage", "データの取得に失敗しました");
+            return "admin/error";
         }
-
-        ProductEditForm form = new ProductEditForm();
-        form.setId(product.getId());
-        form.setName(product.getName());
-        form.setPrice(product.getPrice());
-        form.setQuantity(product.getQuantity());
-        form.setProductCategoryId(product.getProductCategoryId());
-        form.setImageUrl(product.getImageUrl());
-
-        model.addAttribute("form", form);
-
-        List<ProductCategory> categories = productService.getAllCategories();
-        List<Product> products = productService.searchProducts(category);
-        model.addAttribute("categories", categories);
-        model.addAttribute("products", products);
-        model.addAttribute("selectedProductCategory", category);
-
-        return "admin/product/edit_form";
     }
 
     // 💡 完了画面（edit_complete.html）を表示するための設定で
     @GetMapping("/edit/complete")
-    public String showEditCompletePage() {
+    public String showEditCompletePage(Model model) {
+        // ★【安全装置】もし正規のルート（完了ボタン）から送られてくる「productName」が届いていなかったら
+        if (!model.containsAttribute("productName")) {
+            // ➔ トップ画面（メニュー画面：/admin）へ強制リダイレクトして追い返します！
+            return "redirect:/admin";
+        }
+
+        // 正常にボタンを押してきた時だけ、完了画面を表示します
         // templates/admin/edit_complete.html を表示する
         return "admin/product/edit_complete";
     }

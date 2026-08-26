@@ -15,6 +15,12 @@
         <div class="admin-panel p-4 mx-auto text-center" style="max-width: 480px;">
             <h1 class="mb-4">商品修正(確認)</h1>
 
+
+            <div class="alert alert-danger text-start mx-auto mb-4" th:if="${errorMessage}">
+                <span th:text="${errorMessage}">登録処理に失敗しました。管理者に連絡してください。</span>
+            </div>
+            
+
             <table class="table text-start">
                 <tbody>
                     <tr>
