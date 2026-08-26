@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.fullness.stationary.controller.form.CategoryRegistForm;
 import com.example.fullness.stationary.entity.ProductCategory;
-import com.example.fullness.stationary.form.CategoryRegistForm;
 import com.example.fullness.stationary.service.ProductCategoryService;
 
 @Controller
@@ -27,16 +27,16 @@ public class CategoryRegistCheckController {
     public String showConfirmForm(
             @ModelAttribute("categoryInputForm") CategoryRegistForm form, Model model,
             RedirectAttributes redirectAttributes) {
-     
-      try{
-        if (form == null || form.getCategoryName() == null || form.getCategoryName().isEmpty()) {
+
+        if (form == null || form.getCategoryName() == null || form.getCategoryName().length() == 0) {
             redirectAttributes.addFlashAttribute("errorMessage", "入力情報が見つかりません。再度入力してください。");
             return "redirect:/admin/category/add";
         }
-        model.addAttribute("categoryInputForm", form);
-        return "admin/category/confirm"; // セッションデータ不足の場合は入力画面へ、正常な場合は確認画面へ遷移
-    
-        }catch (Exception e) {
+        try {
+            model.addAttribute("categoryInputForm", form);
+            return "admin/category/confirm";
+
+        } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage",
                     "登録処理に失敗しました。管理者に連絡してください。");
             return "redirect:/admin/error";
@@ -45,7 +45,6 @@ public class CategoryRegistCheckController {
 
     // 戻るボタン押下時(確認画面から入力画面へ戻る)
     @PostMapping(value = "/add/confirm", params = "action=back")
-
     public String back(@ModelAttribute("categoryInputForm") CategoryRegistForm form,
             RedirectAttributes redirectAttributes) {
 
@@ -73,4 +72,11 @@ public class CategoryRegistCheckController {
         }
 
     }
+
+    // クラス内のどこか（メソッドの外側）にこれを追加してください
+    @ModelAttribute("categoryInputForm")
+    public CategoryRegistForm setUpCategoryRegistForm() {
+        return new CategoryRegistForm();
+    }
+
 }

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.fullness.stationary.form.CategoryRegistForm;
+import com.example.fullness.stationary.controller.form.CategoryRegistForm;
 import com.example.fullness.stationary.service.ProductCategoryService;
 
 @Controller
@@ -31,7 +31,11 @@ public class CategoryRegistInputController {
 
     // 入力画面表示処理
     @GetMapping("/add")
-    public String showRegisterForm(Model model) {
+    public String showRegisterForm(Model model, @ModelAttribute("errorMessage") String errorMsg) {
+
+        if (errorMsg != null && !errorMsg.isEmpty()) {
+            model.addAttribute("errorMessage", errorMsg);
+        }
         return "admin/category/form";
     }
 
