@@ -75,28 +75,34 @@ public class ProductController {
      * @param model    表示用のモデルオブジェクト。カテゴリ一覧、商品一覧、選択中カテゴリ、総ページ数を格納する
      * @return 商品一覧画面を表す Thymeleaf URL {@code admin/product}
      */
-    @GetMapping("")
+    @GetMapping({ "", "/" })
     public String showProductList(
             @RequestParam(name = "category", required = false, defaultValue = "0") Long category,
             @RequestParam(name = "page", defaultValue = "1") int page,
             Model model) {
 
         int pageSize = 10;
-        // 1. カテゴリ一覧取得
+
+        // 1. カテゴリー一覧取得
         List<ProductCategory> categories = productCategoryService.getAllCategories();
 
         // 2. 商品検索
         List<Product> products = productService.getProductsByProductCategoryWithPaging(category, page, pageSize);
 
-        int totalCount = productService.countProductsByProductCategory(category);
-        int totalPages = (int) Math.ceil((double) totalCount / pageSize);
-        // 3. Modelにデータを詰める
+        int totalCount = productServiceImpl.countProductsByProductCategory(category);
+
+        // 【安全ガード】もし商品総数が0件なら、最大ページ数は強制的に「1」にする
+        int totalPages = (totalCount == 0) ? 1 : (int) Math.ceil((double) totalCount / pageSize);
+
+        // 3. Modelにデータを詰める（HTML側の変数名と100%完全に一致させました）
         model.addAttribute("categories", categories);
         model.addAttribute("products", products);
         model.addAttribute("selectedCategory", category);
         model.addAttribute("selectedProductCategory", category);
         model.addAttribute("totalPages", totalPages);
-        return "admin/product"; // → templates/admin/product.html
+        model.addAttribute("currentPage", page); // ⭕ ここを正しく実際のページ番号（page）に直しました！
+
+        return "admin/product";
     }
 
     // 確認画面を表示するメソッド
