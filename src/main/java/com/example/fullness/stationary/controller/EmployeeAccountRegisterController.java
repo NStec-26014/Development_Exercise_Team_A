@@ -99,6 +99,10 @@ public class EmployeeAccountRegisterController {
     @GetMapping("/confirm")
     public String accountConfirm(@ModelAttribute EmployeeAccountForm employeeAccountForm, HttpSession session,
             Model model) {
+        // セッションデータがない場合は入力画面にリダイレクトする
+        if (session.getAttribute("employeeAccountForm") == null) {
+            return "redirect:/admin/account/form";
+        }
         // formインスタンスに情報を詰め込む
         EmployeeAccountForm form = (EmployeeAccountForm) session.getAttribute("employeeAccountForm");
 
@@ -150,6 +154,10 @@ public class EmployeeAccountRegisterController {
 
     @GetMapping("/complete")
     public String accountRegister(HttpSession session, Model model) {
+        // セッションデータがない場合はメニュー画面にリダイレクトする
+        if (session.getAttribute("employeeName") == null || session.getAttribute("accountName") == null) {
+            return "redirect:/admin";
+        }
         // DBに登録した内容を取得する
         model.addAttribute("employeeName", session.getAttribute("employeeName"));
         model.addAttribute("accountName", session.getAttribute("accountName"));
